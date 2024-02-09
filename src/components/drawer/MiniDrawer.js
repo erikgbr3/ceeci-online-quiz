@@ -104,7 +104,7 @@ export default function MiniDrawer({children}) {
   const router = useRouter();
 
   const handleUsuariosClick = () => {
-    router.push("/users");
+    router.push("/quiz");
   };
 
 
