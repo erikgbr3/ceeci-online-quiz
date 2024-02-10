@@ -1,9 +1,9 @@
+import CardCourse from "@/components/coursesCard";
 import AddQuestion from "@/components/modals/AddQuestion";
 function Quizes () {
   return (
     <div>
-    <h1>Hola</h1>
-    <AddQuestion />
+    <CardCourse/>
     </div>
   );
 }
