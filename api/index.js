@@ -1,1 +1,0 @@
-//controllers/: Controladores que gestionan las solicitudes del frontend y coordinan las acciones correspondientes.

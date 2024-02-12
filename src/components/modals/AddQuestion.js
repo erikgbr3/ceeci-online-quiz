@@ -14,6 +14,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import useModal from '../../../hooks/useModal'; // Ajusta la importación según la nueva ubicación
+import apiClient from '../../../apiClient';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,10 +22,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AddQuestion ({ recharge }) {
   const { isOpen, openModal, closeModal } = useModal();
+
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState([]);
-  const [category, setCategory] = useState('');
+
+  const [category, setCategoryId] = React.useState('');
+  const [categories, setCategories] = useState([]);
+
   const [firstTime, setFirstTime] = useState(true);
+
 
   const addOption = () => {
     // Puedes implementar lógica para validar opciones antes de agregarlas
@@ -46,13 +52,23 @@ export default function AddQuestion ({ recharge }) {
     setOptions(newOptions);
   };
 
-  const handleChangeCategory = (event) => {
-    setCategory(event.target.value);
-  };
+  // const handleChangeCategory = (event) => {
+  //   setCategories(event.target.value);
+  // };
 
   const handleQuestionChange = (event) => {
     setQuestion(event.target.value);
   };
+
+  useEffect(() => {
+    apiClient.get('api/categories')
+    .then(response => {
+      setCategories(response.data || [])
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
 
 
   const [user, setUser] = useState({
@@ -75,6 +91,7 @@ export default function AddQuestion ({ recharge }) {
     console.log('Categoría:', category);
     closeModal();
   };
+
 
   return (
     <div>
@@ -113,7 +130,16 @@ export default function AddQuestion ({ recharge }) {
           <Grid container spacing={2} mt={0}>
             <Grid item xs={12}>
               <TextField
-                id="name"
+                id='question'
+                {
+                ...register('textQuestion',
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
                 variant="outlined"
                 fullWidth
                 label="Pregunta"
@@ -154,15 +180,24 @@ export default function AddQuestion ({ recharge }) {
             <FormControl fullWidth>
               <InputLabel id="category-label">Categoría</InputLabel>
               <Select
-                labelId="category-label"
-                id="category"
+                id='category'
+                {
+                ...register('category',
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
+                onChange={e => setCategoryId(e.target.value)}
                 value={category}
-                label="Categoría"
-                onChange={handleChangeCategory}
+                label="Selecciona la Categoria"
               >
-                <MenuItem value="Ten">Ten</MenuItem>
-                <MenuItem value="Twenty">Twenty</MenuItem>
-                <MenuItem value="Thirty">Thirty</MenuItem>
+                <MenuItem value="">Selecciona la Categoria</MenuItem>
+                  {categories && categories.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>{`${item.name}`}</MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Grid>
