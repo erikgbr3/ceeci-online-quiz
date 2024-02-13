@@ -20,14 +20,6 @@ module.exports = {
           key: 'id'
         }
       },
-      categoryId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Categories',
-          key: 'id'
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
