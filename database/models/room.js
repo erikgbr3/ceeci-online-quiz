@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.Room.belongsTo(models.User, {
-        as: 'RoomUser',
+        as: 'UserRomm',
         foreignKey:'userId'
       })
-      models.Room.belongsTo(models.Result, {
+      models.Room.hasMany(models.Result, {
         as: 'RoomResult',
         foreignKey:'roomId'
       })
-      models.Room.belongsTo(models.Bank, {
+      models.Room.hasMany(models.Bank, {
         as: 'RoomBank',
         foreignKey:'roomId'
       })

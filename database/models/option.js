@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         as: 'OptionQuestion',
         foreignKey:'questionId'
       })
-      models.Option.belongsTo(models.Answer, {
+      models.Option.hasMany(models.Answer, {
         as: 'OptionAnswer',
-        foreignKey:'optionId'
+        foreignKey:'optionId',
       })
     }
   }
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       option2: DataTypes.STRING,
       option3: DataTypes.STRING,
       correctA: DataTypes.STRING,
-      questionId: DataTypes.INTEGER
+      questionId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Option',

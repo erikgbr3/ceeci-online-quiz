@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'QuestionBank',
         foreignKey:'bankId'
       })
-      models.Question.belongsTo(models.Category, {
+      models.Question.hasMany(models.Category, {
         as: 'QuestionCategory',
         foreignKey:'categoryId'
       })
-      models.Question.belongsTo(models.Option, {
+      models.Question.hasMany(models.Option, {
         as: 'QuestionOption',
         foreignKey:'questionId'
       })
