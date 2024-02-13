@@ -41,31 +41,6 @@ const getQuestion = async (req, res) => {
           as: 'QuestionCategory',
           attributes: ['id', 'name'],
         },
-        // {
-        //   model: db.Option, // Asegúrate de incluir el modelo correcto
-        //   as: 'QuestionOption',
-        //   attributes: [
-        //     'id', 
-        //     'option1', 
-        //     'option2',
-        //     'option3',
-        //     'correctA',
-        //     'questionId'
-        // ], // Incluye los atributos necesarios
-        // },
-        // {
-        //   model: db.Answer, // Asegúrate de incluir el modelo correcto
-        //   as: 'QuestionAnswer',
-        //   attributes: [
-        //     'id',
-        //     'userId',
-        //     'questionId',
-        //     'optionId'
-        //   ],
-        //   where: {
-        //     questionId: Sequelize.col('Question.id')
-        //   }
-        // },
       ],
       attributes: [
         'id',
@@ -92,11 +67,52 @@ const getQuestion = async (req, res) => {
 //POST Function
 const addQuestion = async (req, res) => {
   try {
-    
+    const { textQuestion, category, options } = req.body;
+
+    // Inicia una transacción
+    const transaction = await db.sequelize.transaction();
+
+    try {
+      // Primero, inserta en la tabla referenciada (Banks)
+      const createdBank = await db.Bank.create({
+        // Asegúrate de incluir los datos necesarios para crear un banco
+        name: 'Nombre del Banco',  // Reemplaza con el nombre real del banco
+        roomId: 1,
+      }, { transaction });
+
+      // Luego, inserta en la tabla referenciante (Questions)
+      const createdQuestion = await db.Question.create({
+        textQuestion,
+        categoryId: category,
+        bankId: createdBank.id, // Utiliza el id del banco recién creado
+        // Otros campos que puedas necesitar
+      }, { transaction });
+
+      // Confirma la transacción
+      await transaction.commit();
+
+      // Puedes ajustar el manejo de la respuesta según tus necesidades
+      res.status(201).json({
+        message: 'Pregunta agregada exitosamente',
+        question: createdQuestion,
+      });
+    } catch (error) {
+      // Si hay un error, revierte la transacción
+      await transaction.rollback();
+      throw error; // Lanza el error para manejarlo más adelante
+    }
   } catch (error) {
-    
+    console.error(error);
+    // Puedes manejar los errores de manera adecuada y devolver un mensaje específico
+    res.status(500).json({
+      message: 'Error al agregar la pregunta',
+      error: error.message,
+    });
   }
-}
+};
+
+module.exports = { addQuestion };
+
 
 //PUT Function
 const updateQuestion = async (req, res) => {

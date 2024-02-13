@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Swal from "sweetalert2";
 
 import useModal from '../../../hooks/useModal'; // Ajusta la importación según la nueva ubicación
 import apiClient from '../../../apiClient';
@@ -85,12 +86,56 @@ export default function AddQuestion ({ recharge }) {
     reset,
   } = useForm();
 
-  const onSubmit = () => {
-    console.log('Pregunta:', question);
-    console.log('Opciones:', options);
-    console.log('Categoría:', category);
-    closeModal();
+  const onSubmitQuestion = async (data) => {
+    try {
+      console.log('Pregunta:', data.textQuestion);
+      console.log('Opciones:', data.options);
+      console.log('Categoría:', data.category);
+  
+      const response = await apiClient.post("/api/questions", {
+        textQuestion: data.textQuestion,
+        options: data.options,
+        category: data.category,
+      });
+  
+      // Puedes ajustar el manejo de la respuesta según tus necesidades
+      console.log(response.data);
+  
+      // Restablecer el formulario y realizar otras acciones necesarias
+      reset();
+  
+      // Cierra el modal y recarga los datos según tus necesidades
+      closeModal();
+      recharge();
+  
+      // Muestra un mensaje de éxito
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        text: response.data.message,
+        confirmButtonText: "Aceptar",
+      });
+  
+      // Cierra el mensaje de éxito después de 1.5 segundos
+      setTimeout(() => {
+        Swal.close();
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+  
+      // Muestra un mensaje de error y maneja los errores de validación si los hay
+      alert(error.response?.data?.message || 'Error al agregar la pregunta');
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((errorItem) => {
+          setError(errorItem.field, {
+            type: "validation",
+            message: errorItem.error,
+          });
+        });
+      }
+    }
   };
+  
 
 
   return (
@@ -113,7 +158,7 @@ export default function AddQuestion ({ recharge }) {
         onClose={closeModal}
         aria-describedby="alert-dialog-slide-description"
         component={"form"}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmitQuestion)}
       >
       <DialogTitle
         sx={{
@@ -130,7 +175,7 @@ export default function AddQuestion ({ recharge }) {
           <Grid container spacing={2} mt={0}>
             <Grid item xs={12}>
               <TextField
-                id='question'
+                id='textQuestion'
                 {
                 ...register('textQuestion',
                   {
@@ -151,6 +196,16 @@ export default function AddQuestion ({ recharge }) {
           {options.map((option, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: index === 0 ? '35px' : '2px' }}>
               <TextField
+                id={`option-${index}`}
+                {
+                ...register(`option-${index}`,
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
                 variant="outlined"
                 fullWidth
                 label={`Opción ${index + 1}`}
@@ -192,7 +247,6 @@ export default function AddQuestion ({ recharge }) {
                 }
                 onChange={e => setCategoryId(e.target.value)}
                 value={category}
-                label="Selecciona la Categoria"
               >
                 <MenuItem value="">Selecciona la Categoria</MenuItem>
                   {categories && categories.map((item) => (
