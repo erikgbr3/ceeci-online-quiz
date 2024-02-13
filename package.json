@@ -21,10 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
-    "sequelize": "^6.36.0",
+    "sequelize": "^6.37.0",
+    "sequelize-cli": "^6.6.2",
     "sweetalert2": "^11.10.5"
-  },
-  "devDependencies": {
-    "sequelize-cli": "^6.6.2"
   }
 }

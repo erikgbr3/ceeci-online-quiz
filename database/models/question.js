@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         as: 'QuestionBank',
         foreignKey:'bankId'
       })
-      models.Question.hasMany(models.Category, {
-        as: 'QuestionCategory',
-        foreignKey:'categoryId'
-      })
       models.Question.hasMany(models.Option, {
         as: 'QuestionOption',
         foreignKey:'questionId'
@@ -31,8 +27,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Question.init({
     textQuestion: DataTypes.STRING,
-    bankId: DataTypes.INTEGER,
-    categoryId: DataTypes.INTEGER
+    bankId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Question',

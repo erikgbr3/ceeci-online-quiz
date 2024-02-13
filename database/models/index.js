@@ -22,7 +22,6 @@ import bank from './bank';
 import result from './result';
 import room from './room';
 import question from './question';
-import category from './category';
 import option from './option';
 import answer from './answer';
 
@@ -31,7 +30,6 @@ db.Bank = bank(sequelize, Sequelize.DataTypes);
 db.Result = result(sequelize, Sequelize.DataTypes);
 db.Room = room(sequelize, Sequelize.DataTypes);
 db.Question = question(sequelize, Sequelize.DataTypes);
-db.Category = category(sequelize, Sequelize.DataTypes);
 db.Option = option(sequelize, Sequelize.DataTypes);
 db.Answer = answer(sequelize, Sequelize.DataTypes);
 
