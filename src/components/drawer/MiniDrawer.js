@@ -17,8 +17,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PeopleIcon from "@mui/icons-material/People";
+import ArticleIcon from '@mui/icons-material/Article';
+import ClassIcon from '@mui/icons-material/Class';
 // import { useRouter } from "next/router";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+
+import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
+import ButtonCloseSession from "../ButtonCloseSession";
+import useNavigation from "@/pages/api/routes/routes";
 
 const drawerWidth = 240;
 
@@ -89,8 +96,17 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer({children}) {
 
+  const { data: session } = useSession();
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const { 
+    handleUsersClick, 
+    handleCoursesClick, 
+    handleQuizzesClick,
+
+  } = useNavigation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -98,13 +114,6 @@ export default function MiniDrawer({children}) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  // const router = useRouter();
-  const router = useRouter();
-
-  const handleUsuariosClick = () => {
-    router.push("/quiz");
   };
 
 
@@ -129,7 +138,7 @@ export default function MiniDrawer({children}) {
             <Typography variant="h6" noWrap component="div">
             CEECI
             </Typography>
-            {/* <ButtonClose user={session?.user} /> */}
+            <ButtonCloseSession user={session?.user} />
           </div>
         </Toolbar>
       </AppBar>
@@ -145,17 +154,22 @@ export default function MiniDrawer({children}) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Prospectos"].map(
+          {["Usuarios", "Cursos", "Examenes"].map(
             (text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
-                  onClick={handleUsuariosClick}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                     padding: 3,
                   }}
+
+                  onClick={
+                    index === 0 ? handleUsersClick : (
+                      index === 1 ? handleCoursesClick : handleQuizzesClick
+                    )
+                  }
                 >
                   <ListItemIcon
                     sx={{
@@ -166,11 +180,11 @@ export default function MiniDrawer({children}) {
                     }}
                   >
                     {
-                      index === 0 ? (
-                        <PeopleIcon/> 
-                      ) : index === 1 
-                      
+                      index === 0 ? ( <PeopleIcon/> ) :  (
+                          index === 1 ? <ClassIcon/> : <ArticleIcon/>
+                        )
                     }
+
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>

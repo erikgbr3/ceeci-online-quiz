@@ -16,20 +16,22 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+//Importar modelos
+import user from './user';
+import bank from './bank';
+import result from './result';
+import room from './room';
+import question from './question';
+import option from './option';
+import answer from './answer';
+
+db.User = user(sequelize, Sequelize.DataTypes);
+db.Bank = bank(sequelize, Sequelize.DataTypes);
+db.Result = result(sequelize, Sequelize.DataTypes);
+db.Room = room(sequelize, Sequelize.DataTypes);
+db.Question = question(sequelize, Sequelize.DataTypes);
+db.Option = option(sequelize, Sequelize.DataTypes);
+db.Answer = answer(sequelize, Sequelize.DataTypes);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

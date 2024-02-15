@@ -12,8 +12,10 @@ import { useForm } from 'react-hook-form';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Swal from "sweetalert2";
 
 import useModal from '../../../hooks/useModal'; // Ajusta la importación según la nueva ubicación
+import apiClient from '../../../apiClient';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,10 +23,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AddQuestion ({ recharge }) {
   const { isOpen, openModal, closeModal } = useModal();
+
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState([]);
-  const [category, setCategory] = useState('');
+
+  const [category, setCategoryId] = React.useState('');
+  const [categories, setCategories] = useState([]);
+
   const [firstTime, setFirstTime] = useState(true);
+
 
   const addOption = () => {
     // Puedes implementar lógica para validar opciones antes de agregarlas
@@ -46,13 +53,23 @@ export default function AddQuestion ({ recharge }) {
     setOptions(newOptions);
   };
 
-  const handleChangeCategory = (event) => {
-    setCategory(event.target.value);
-  };
+  // const handleChangeCategory = (event) => {
+  //   setCategories(event.target.value);
+  // };
 
   const handleQuestionChange = (event) => {
     setQuestion(event.target.value);
   };
+
+  useEffect(() => {
+    apiClient.get('api/categories')
+    .then(response => {
+      setCategories(response.data || [])
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
 
 
   const [user, setUser] = useState({
@@ -69,12 +86,57 @@ export default function AddQuestion ({ recharge }) {
     reset,
   } = useForm();
 
-  const onSubmit = () => {
-    console.log('Pregunta:', question);
-    console.log('Opciones:', options);
-    console.log('Categoría:', category);
-    closeModal();
+  const onSubmitQuestion = async (data) => {
+    try {
+      console.log('Pregunta:', data.textQuestion);
+      console.log('Opciones:', data.options);
+      console.log('Categoría:', data.category);
+  
+      const response = await apiClient.post("/api/questions", {
+        textQuestion: data.textQuestion,
+        options: data.options,
+        category: data.category,
+      });
+  
+      // Puedes ajustar el manejo de la respuesta según tus necesidades
+      console.log(response.data);
+  
+      // Restablecer el formulario y realizar otras acciones necesarias
+      reset();
+  
+      // Cierra el modal y recarga los datos según tus necesidades
+      closeModal();
+      recharge();
+  
+      // Muestra un mensaje de éxito
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        text: response.data.message,
+        confirmButtonText: "Aceptar",
+      });
+  
+      // Cierra el mensaje de éxito después de 1.5 segundos
+      setTimeout(() => {
+        Swal.close();
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+  
+      // Muestra un mensaje de error y maneja los errores de validación si los hay
+      alert(error.response?.data?.message || 'Error al agregar la pregunta');
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((errorItem) => {
+          setError(errorItem.field, {
+            type: "validation",
+            message: errorItem.error,
+          });
+        });
+      }
+    }
   };
+  
+
 
   return (
     <div>
@@ -96,7 +158,7 @@ export default function AddQuestion ({ recharge }) {
         onClose={closeModal}
         aria-describedby="alert-dialog-slide-description"
         component={"form"}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmitQuestion)}
       >
       <DialogTitle
         sx={{
@@ -113,7 +175,16 @@ export default function AddQuestion ({ recharge }) {
           <Grid container spacing={2} mt={0}>
             <Grid item xs={12}>
               <TextField
-                id="name"
+                id='textQuestion'
+                {
+                ...register('textQuestion',
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
                 variant="outlined"
                 fullWidth
                 label="Pregunta"
@@ -125,6 +196,16 @@ export default function AddQuestion ({ recharge }) {
           {options.map((option, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: index === 0 ? '35px' : '2px' }}>
               <TextField
+                id={`option-${index}`}
+                {
+                ...register(`option-${index}`,
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
                 variant="outlined"
                 fullWidth
                 label={`Opción ${index + 1}`}
@@ -154,15 +235,23 @@ export default function AddQuestion ({ recharge }) {
             <FormControl fullWidth>
               <InputLabel id="category-label">Categoría</InputLabel>
               <Select
-                labelId="category-label"
-                id="category"
+                id='category'
+                {
+                ...register('category',
+                  {
+                    required: '*Este campo es obligatorio.',
+                    pattern: {
+                      message: 'No es una categoria válida.'
+                    }
+                  })
+                }
+                onChange={e => setCategoryId(e.target.value)}
                 value={category}
-                label="Categoría"
-                onChange={handleChangeCategory}
               >
-                <MenuItem value="Ten">Ten</MenuItem>
-                <MenuItem value="Twenty">Twenty</MenuItem>
-                <MenuItem value="Thirty">Thirty</MenuItem>
+                <MenuItem value="">Selecciona la Categoria</MenuItem>
+                  {categories && categories.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>{`${item.name}`}</MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Grid>
