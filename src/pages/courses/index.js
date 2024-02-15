@@ -1,11 +1,12 @@
 import AddQuestion from "@/components/modals/AddQuestion";
 import CardCourse from "@/components/roomsCard";
-function Quizes () {
+function Rooms () {
   return (
     <div>
     <h1>Hola</h1>
+    <CardCourse />
     </div>
   );
 }
 
-export default Quizes;
+export default Rooms;
