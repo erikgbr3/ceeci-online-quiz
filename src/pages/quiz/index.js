@@ -1,4 +1,5 @@
-import AddBank from "@/components/modals/AddBank";
+
+import CardCourse from "@/components/coursesCard";
 import AddQuestion from "@/components/modals/AddQuestion";
 import BankList from '@/components/BankList';
 import apiClient from "../../../apiClient";
@@ -22,7 +23,7 @@ function Quizes () {
 
   return (
     <div>
-    <BankList banks={banks} />
+    <CardCourse/>
     </div>
   );
 }
