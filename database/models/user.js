@@ -1,4 +1,5 @@
 'use strict';
+import bcrypt from "bcrypt"
 const {
   Model
 } = require('sequelize');
