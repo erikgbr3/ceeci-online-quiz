@@ -155,11 +155,10 @@ const UserTable = () => {
           <Table aria-label="User Table">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ color: '#223354', fontWeight: "800" }}>ID</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>NOMBRE</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>EMAIL</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>ROL</TableCell>
-                <TableCell sx={{ color: '#223354', fontWeight: "800" }}>ACCIONES</TableCell>
+                <TableCell sx={{ color: '#223354', fontWeight: "800", alignItems: "self-end" }}>ACCIONES</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{renderUsers()}</TableBody>

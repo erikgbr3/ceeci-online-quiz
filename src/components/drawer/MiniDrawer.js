@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
 import ButtonCloseSession from "../ButtonCloseSession";
 import useNavigation from "@/pages/api/routes/routes";
+import { Tooltip } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -180,9 +181,21 @@ export default function MiniDrawer({children}) {
                     }}
                   >
                     {
-                      index === 0 ? ( <PeopleIcon/> ) :  (
-                          index === 1 ? <ClassIcon/> : <ArticleIcon/>
+                      index === 0 ? ( 
+                        <Tooltip title="Usuarios" arrow>
+                          <PeopleIcon />
+                        </Tooltip> 
+                      ) :  (
+                        index === 1 ? (
+                        <Tooltip title="Salas" arrow>
+                          <ClassIcon />
+                        </Tooltip>
+                        ) : (
+                        <Tooltip title="Examenes" arrow>
+                          <ArticleIcon />
+                        </Tooltip>
                         )
+                      )
                     }
 
                   </ListItemIcon>

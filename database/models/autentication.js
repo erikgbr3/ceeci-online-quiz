@@ -4,7 +4,7 @@ export const checkUserEmailPassword = async (_email, password) => {
   const user = await db.User.findOne(
     { 
       where: { email: _email },
-      attributes: ['name', 'lastName', 'email', 'password', 'rol']
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
     }
   );
 
@@ -16,11 +16,12 @@ export const checkUserEmailPassword = async (_email, password) => {
     return null;
   }
 
-  const { id, name, email, rol, } = user;
+  const { id, name, lastName, email, rol, } = user;
   console.log(user);
   return {
     id,
     name,
+    lastName,
     email,
     rol,
   };
