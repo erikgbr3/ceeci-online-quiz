@@ -77,26 +77,27 @@ const LoginPage = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(.././imgLogin.png)',
+          // height: '90%',
+          backgroundImage: 'url(.././imgLogin.jpeg)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: 'cover',
+          backgroundSize: '100% auto',
           backgroundPosition: 'center',
         }}
       />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={2} square>
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={1} square>
         <Box
           component="form"
           onSubmit={handleSubmit(onLoginUser)}
           noValidate
           sx={{
             // width: 500,
-            p: 4,
+            p: 6,
             backgroundColor: "rgba(255, 255, 255)",
             borderRadius: "10px",
-            boxShadow: 2,
-            my: 8,
+            boxShadow: 1,
+            my: 10,
             // mx: 4,
             display: 'flex',
             flexDirection: 'column',
@@ -196,9 +197,9 @@ const LoginPage = () => {
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
  
-let { p = "http://localhost:3000/quiz" } = query;
+let { p = "http://localhost:3000/home" } = query;
   if(session?.user?.rol == 'usuario') {
-    p = 'http://localhost:3000/quiz';
+    p = 'http://localhost:3000/rooms';
   }
 
   if (session) {

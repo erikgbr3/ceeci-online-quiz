@@ -58,7 +58,7 @@ function ButtonCloseSession({ user }) {
       confirmButtonText: 'Si, estoy seguro',
     }).then((result) => {
       if (result.isConfirmed) {
-        signOut({ callbackUrl: 'http://localhost:3000' });
+        signOut({ callbackUrl: 'http://localhost:3000/login' });
       }
     });
 
@@ -73,8 +73,12 @@ function ButtonCloseSession({ user }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar src={user?.image} />
+          <Avatar src={user?.image} /> 
         </StyledBadge>
+        <Typography variant="inherit" style={{ color: "white", fontSize: 15,  margin: '0 10px', textShadow: '2px 2px 2px rgba(0, 0, 0, 0.5)', fontFamily: 'Arial, sans-serif' }}>
+        {user?.name}
+        </Typography>
+        
       </IconButton>
       <Menu
         anchorEl={anchorEl}

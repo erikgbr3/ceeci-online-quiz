@@ -2,13 +2,13 @@ import * as React from "react";
 import { TableRow, TableCell, IconButton, styled, Avatar } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import EditUserModal from "./modals/editUserModal";
+import EditUser from "./modals/editUser";
 
 
 const getRolColor = (rol) => {
   return rol === "administrador"
     ? "red"
-    : rol === "empleado"
+    : rol === "usuario"
     ? "rgb(51, 194, 255)"
     : "inherit";
 };
@@ -50,11 +50,7 @@ function UserList({ user, onDelete, onUpdate }) {
 
   return (
     <TableRow key={data.id}>
-      <TableCell>{data.id}</TableCell>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar src={data.image} />
-        <span style={{ marginLeft: '10px'}}>{data.name} {data.lastName}</span>
-      </TableCell>
+      <TableCell>{data.name} {data.lastName} </TableCell>
       <TableCell>{data.email}</TableCell>
       <CustomTableCell rol={data.rol}>
         <RolText rol={data.rol}>{data.rol}</RolText>
@@ -76,12 +72,12 @@ function UserList({ user, onDelete, onUpdate }) {
         </IconButton>
       </TableCell>
 
-      {/* <EditUserModal
+      <EditUser
         open={edit}
         user={data}
         onClose={cancelEdit}
         onUpdate={onUpdate}
-      /> */}
+      />
     </TableRow>
   );
 }
