@@ -199,7 +199,7 @@ export const getServerSideProps = async ({ req, query }) => {
  
 let { p = "http://localhost:3000/home" } = query;
   if(session?.user?.rol == 'usuario') {
-    p = 'http://localhost:3000/rooms';
+    p = 'http://localhost:3000/courses';
   }
 
   if (session) {
