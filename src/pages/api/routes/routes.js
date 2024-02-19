@@ -13,7 +13,7 @@ const useNavigation = () => {
   };
 
   const handleQuizzesClick = () => {
-    router.push('/quiz');
+    router.push('/banks');
   };
 
 

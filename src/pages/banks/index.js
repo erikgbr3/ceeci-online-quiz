@@ -1,10 +1,8 @@
+import BankList from "@/components/BankList";
+import { useEffect, useState } from "react";
+import apiClient from "../../../apiClient";
 
-import CardCourse from "@/components/coursesCard";
-import AddQuestion from "@/components/modals/AddQuestion";
-
-import CardCourse from "@/components/roomsCard";
-
-function Quizes () {
+function Banks () {
 
   const [banks, setBanks] = useState([]);
 
@@ -23,12 +21,9 @@ function Quizes () {
 
   return (
     <div>
-    <h1>Hola</h1>
-
-    <CardCourse/>
-
+      <BankList banks={banks}/>
     </div>
   );
 }
 
-export default Quizes;
+export default Banks;

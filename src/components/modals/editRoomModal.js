@@ -31,11 +31,13 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
   const [rooms, setRooms] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [userss, setUserId] = React.useState('');
+  
 
   const roomUser = rooms.find(item => item.id === data.id)?.roomUser;
 
 
   const onSubmit = (data) => {
+   
     data.id = room.id;
     // data.observations = user.observations;
     //posibles modificaciones
@@ -45,13 +47,6 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
       data.userId = parseInt(userss, 10); // Convertir a entero si es un número válido
     }
   
-    // Verificación y asignación de valor predeterminado si course es vacío o no es un entero
-    if (!course || isNaN(course)) {
-      data.area = 1; // Puedes asignar un valor predeterminado, por ejemplo, 1
-    } else {
-      data.area = parseInt(course, 10); // Convertir a entero si es un número válido
-    }
-
     //fin de posibles modificaciones
     console.log("Usuario a actualizar:", room);
     apiClient.put(`/api/rooms?id=${room.id}`, data)
@@ -126,37 +121,41 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
       >
         Editar Sala
       </DialogTitle>
+      <DialogContent>
+        <TextField
+          label="Nombre"
+          defaultValue={data.name}
+          {...register("name")}
+        />
+      </DialogContent>
       
       <DialogActions
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginRight: "80px",
-          marginLeft: "80px",
-          marginBottom: "5px",
-        }}
-      >
-        <Button 
-          onClick={onClose} 
-          variant="contained"
-          color="error"
-        >
-          <IconButton color="inherit">
-            <CancelIcon />
-          </IconButton>
-          Cancelar
-        </Button>
-        <Button 
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          <IconButton color="inherit">
-            <SaveIcon />
-          </IconButton>
-          Guardar
-        </Button>
-      </DialogActions>
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginRight: "80px",
+    marginLeft: "80px",
+    marginBottom: "5px",
+  }}
+>
+  <Button 
+    onClick={onClose} 
+    variant="contained"
+    color="error"
+    startIcon={<span><CancelIcon /></span>}
+  >
+    Cancelar
+  </Button>
+  <Button 
+    variant="contained"
+    color="primary"
+    type="submit"
+    startIcon={<span><SaveIcon /></span>}
+  >
+    Guardar
+  </Button>
+</DialogActions>
+
     </Dialog>
   );
 }

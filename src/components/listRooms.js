@@ -100,7 +100,7 @@ function ListCategory({ room, onDelete, onUpdate }) {
 
                 <EditUserModal
                 open={edit}
-                user={data}
+                room={data}
                 onClose={cancelEdit}
                 onUpdate={onUpdate}
                  />

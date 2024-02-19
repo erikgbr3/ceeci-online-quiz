@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from "sweetalert2";
 import apiClient from '../../../apiClient';
+import { getSession } from 'next-auth/react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -15,16 +16,37 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AddRooms ({ recharge }) {
   const { isOpen, openModal, closeModal } = useModal();
   const { register, handleSubmit, reset, } = useForm();
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    async function getUserId() {
+      const session = await getSession();  // Obtiene la sesión actual
+
+      console.log('Sesión:', session); 
+
+      // Verifica si la sesión y el usuario están presentes, y si el ID de usuario está definido
+      if (session && session.user && session.user.id) {
+        setUserId(session.user.id); // Establece el ID de usuario en el estado
+      } else {
+        console.error('Sesión de usuario no disponible');
+      }
+    }
+    getUserId();
+  }, []);
 
   const onSubmitBank = async (data) => {
     try {
+
+      if (!userId) { // Verifica si el ID de usuario está disponible
+        console.error('ID de usuario no disponible');
+        return;
+      }
       const response = await apiClient.post("/api/rooms", {
         name: data.name,
-        userId: data.userId,
+        userId: userId, // Utiliza el ID de usuario obtenido de la sesión iniciada
       });
 
       reset();
-      
       closeModal();
       recharge();
 
@@ -100,23 +122,6 @@ export default function AddRooms ({ recharge }) {
                 variant="outlined"
                 fullWidth
                 label="Nombre"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id='userId'
-                {
-                ...register('userId',
-                  {
-                    required: '*Este campo es obligatorio.',
-                    pattern: {
-                      message: 'No es un roomId válido.'
-                    }
-                  })
-                }
-                variant="outlined"
-                fullWidth
-                label="UserId"
               />
             </Grid>
           </Grid>
