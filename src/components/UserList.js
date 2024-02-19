@@ -73,10 +73,10 @@ function UserList({ user, onDelete, onUpdate }) {
       </TableCell>
 
       <EditUser
-        open={edit}
-        user={data}
-        onClose={cancelEdit}
+        isOpen={edit}
+        closeModal={cancelEdit}
         onUpdate={onUpdate}
+        user={data}
       />
     </TableRow>
   );

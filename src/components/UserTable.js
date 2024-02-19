@@ -69,28 +69,6 @@ const UserTable = () => {
       setFilteredUsers([...usersCopy]);
   }
 
-  const renderUsers = () => {
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-    return currentUsers.map((user) => (
-      <UserList
-        user={user}
-        onDelete={deleteUser}
-        onSaved={loadUsers}
-        onUpdate={updateUser}
-        key={user.id}
-      />
-    ));
-  };
-
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-
-  const changePage = (event, newPage) => {
-    setCurrentPage(newPage);
-  };
-  
   // Función para eliminar un usuario
   const deleteUser = (id) => {
     console.log("ID a eliminar:", id); 
@@ -124,6 +102,29 @@ const UserTable = () => {
       }
     });
   };
+
+  const renderUsers = () => {
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+    return currentUsers.map((user) => (
+      <UserList
+        user={user}
+        onDelete={() => deleteUser(user.id)}
+        onSaved={loadUsers}
+        onUpdate={updateUser}
+        key={user.id}
+      />
+    ));
+  };
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const changePage = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+  
 
   return (
     <Box>
