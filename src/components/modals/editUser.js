@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 import apiClient from "../../../apiClient";
 
-function EditUser({ isOpen, user, closeModal, onUpdate }) {
+function EditUser({ isOpen, closeModal, onUpdate, user }) {
   // const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { register, handleSubmit, reset, formState: { errors }, setError, } = useForm();
 
