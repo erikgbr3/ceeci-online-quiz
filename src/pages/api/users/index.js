@@ -32,7 +32,7 @@ const listUsers = async (req, res) => {
       where: {
           id:userId,
       },
-      attributes: ['name', 'lastName', 'email', 'password', 'rol']
+      attributes: ['id', 'name', 'lastName', 'email', 'password', 'rol']
       });
 
       //console.log(users);
@@ -58,7 +58,7 @@ const listUsers = async (req, res) => {
     }
      users = await db.User.findAll({
       where: whereCondition,
-      attributes: ['name', 'lastName', 'email', 'password', 'rol']
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
     });
 
     return res.json(users);
@@ -172,6 +172,7 @@ const editUsers = async (req, res) => {
 
     await db.User.update(userData, {
       where: { id },
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
     });
 
     res.json({
@@ -205,6 +206,7 @@ const deleteUsers = async (req, res) => {
       where: {
         id: id,
       },
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
     });
 
     if (!user) {
@@ -219,6 +221,7 @@ const deleteUsers = async (req, res) => {
       where: {
         id: id,
       },
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
     });
 
     res.json({

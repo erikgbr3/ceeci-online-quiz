@@ -17,7 +17,7 @@ const CardCourse = () => {
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const roomsPerPage = 5;
+  const roomsPerPage = 6;
 
   const navigation = useNavigation();
 
@@ -57,7 +57,7 @@ const CardCourse = () => {
     const index = roomsCopy.findIndex(item => item.id == room.id);
     console.log(index);
     roomsCopy.splice(index, 1, room)
-    setrooms([...roomsCopy]);
+    setRooms([...roomsCopy]);
     setFilteredRooms([...roomsCopy]);
   }
 
@@ -70,7 +70,7 @@ const CardCourse = () => {
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
     const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
     
-    return filteredRooms.map((room) => (
+    return currentRooms.map((room) => (
       <ListCategory
         room={room}
         onDelete={deleteRoom}
