@@ -9,14 +9,15 @@ import { CardActionArea } from '@mui/material';
 import { useState, useEffect } from 'react';
 import EditUserModal from "./modals/editRoomModal";
 import apiClient from "../../apiClient";
+import useNavigation from "@/pages/api/routes/routes";
 
-function ListCategory({ room, onDelete, onUpdate }) {
+function ListCategory({ room, onDelete, onUpdate, onClick }) {
   const [data, setData] = React.useState({ ...room });
   const [edit, setEdit] = React.useState(false);
   const [roomss, setRoomss] = React.useState([]);
   const [users, setUsers] = React.useState([]);
 
-
+  const { navigateToBankCreation } = useNavigation();
   
   const roomUser = roomss.find(item => item.id === data.id)?.roomUser;
  
@@ -32,6 +33,10 @@ function ListCategory({ room, onDelete, onUpdate }) {
 
   const handleDelete = () => {
     onDelete(data.id);
+  }
+
+  const handleCardClick = () => {
+    navigateToBankCreation(room.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
   }
 
     useEffect(() => {
@@ -60,53 +65,55 @@ function ListCategory({ room, onDelete, onUpdate }) {
 
 
   return (
-    <Card variant="outlined" style={{
-      width: '250px',
-      margin: '10px',
-      borderRadius: '15px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      cursor: 'pointer', // Cambiar el cursor cuando se pasa sobre la tarjeta
-    }}>
-        <CardContent style={{ textAlign: 'center' }}>
-            <Typography variant="h7" component="h2"  >
-                {room.name}
-            </Typography>
-            {/*  <Typography color="textSecondary">
-                Id: {room.id}
-            </Typography> */}
+    <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
+      <Card variant="outlined" style={{
+        width: '250px',
+        margin: '10px',
+        borderRadius: '15px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        cursor: 'pointer', // Cambiar el cursor cuando se pasa sobre la tarjeta
+      }}>
+          <CardContent style={{ textAlign: 'center' }}>
+              <Typography variant="h7" component="h2"  >
+                  {room.name}
+              </Typography>
+              {/*  <Typography color="textSecondary">
+                  Id: {room.id}
+              </Typography> */}
 
-             {/*   <Typography color="textSecondary">
-                Id de Usuario: {room.userId}
-            </Typography>*/}
-           
+              {/*   <Typography color="textSecondary">
+                  Id de Usuario: {room.userId}
+              </Typography>*/}
+            
 
-          
+            
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                <IconButton
-                    aria-label="Eliminar"
-                    onClick={handleDelete}
-                    style={{ color: "red" }}
-                    >
-                    <DeleteIcon />
-                 </IconButton>
-                <IconButton
-                    aria-label="Editar"
-                    onClick={handleEdit}
-                    style={{ color: "blue" }}
-                    >
-                    <EditIcon />
-                </IconButton>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                  <IconButton
+                      aria-label="Eliminar"
+                      onClick={handleDelete}
+                      style={{ color: "red" }}
+                      >
+                      <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                      aria-label="Editar"
+                      onClick={handleEdit}
+                      style={{ color: "blue" }}
+                      >
+                      <EditIcon />
+                  </IconButton>
 
-                <EditUserModal
-                open={edit}
-                room={data}
-                onClose={cancelEdit}
-                onUpdate={onUpdate}
-                 />
-            </div>
-        </CardContent>
-    </Card>
+                  <EditUserModal
+                  open={edit}
+                  user={data}
+                  onClose={cancelEdit}
+                  onUpdate={onUpdate}
+                  />
+              </div>
+          </CardContent>
+      </Card>
+    </div>
   );
    
 }

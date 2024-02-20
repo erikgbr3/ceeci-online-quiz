@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from "sweetalert2";
 import apiClient from '../../../apiClient';
+import { useRouter } from 'next/router';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -15,12 +16,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AddBank ({ recharge }) {
   const { isOpen, openModal, closeModal } = useModal();
   const { register, handleSubmit, reset, } = useForm();
+  const router = useRouter();
+  const roomId =  router.query.roomId || null;
 
   const onSubmitBank = async (data) => {
     try {
+      // // console.log('SQL antes de la inserción:', `INSERT INTO Banks (name, roomId, createdAt, updatedAt) VALUES ('${data.name}', ${room.Id}, NOW(), NOW());`);
       const response = await apiClient.post("/api/banks", {
         name: data.name,
-        roomId: data.roomId,
+        roomId: roomId,
       });
 
       reset();
@@ -39,6 +43,7 @@ export default function AddBank ({ recharge }) {
       }, 1500);
 
     } catch (error) {
+      // console.error('Error en la solicitud POST a /api/banks:', error);
       if (error.response?.data?.errors) {
         error.response.data.errors.forEach((errorItem) => {
           setError(errorItem.field, {
@@ -100,23 +105,6 @@ export default function AddBank ({ recharge }) {
                 variant="outlined"
                 fullWidth
                 label="Nombre"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id='roomId'
-                {
-                ...register('roomId',
-                  {
-                    required: '*Este campo es obligatorio.',
-                    pattern: {
-                      message: 'No es un roomId válido.'
-                    }
-                  })
-                }
-                variant="outlined"
-                fullWidth
-                label="RoomId"
               />
             </Grid>
           </Grid>
