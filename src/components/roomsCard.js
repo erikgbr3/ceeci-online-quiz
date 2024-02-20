@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import apiClient from "../../apiClient";
 import ListCategory from "./listRooms";
 import AddRooms from "./modals/AddRooms";
+import useNavigation from "@/pages/api/routes/routes";
 
 const CardCourse = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,6 +18,8 @@ const CardCourse = () => {
   const [rooms, setRooms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 5;
+
+  const navigation = useNavigation();
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -58,6 +61,10 @@ const CardCourse = () => {
     setFilteredRooms([...roomsCopy]);
   }
 
+  const handleRoomsClick = () => {
+    navigation.navigateToBankCreation();
+  };
+
   const renderRooms = () => {
     const indexOfLastRoom = currentPage * roomsPerPage;
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
@@ -70,6 +77,7 @@ const CardCourse = () => {
         onSaved={loadRooms}
         onUpdate={updateRooms}
         key={room.id}
+        onClick={() => handleRoomsClick()}
       />
     ));
   };
@@ -116,7 +124,7 @@ const CardCourse = () => {
     <Box>
       <Paper>
         <Typography sx={{ display: "flex", justifyContent: "Center", fontSize: 25, fontWeight: 'bold' }}>
-          Rooms
+          Salas
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <AddRooms recharge={loadRooms} />
