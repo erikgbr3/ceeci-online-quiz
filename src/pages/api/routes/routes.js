@@ -16,22 +16,11 @@ const useNavigation = () => {
     router.push('/banks');
   };
 
-  // const navigateToBankCreation = (roomId) => {
-  //   const currentPath = router.asPath;
-
-  //   // Si ya estás en la misma ruta, forzar la recarga de la página
-  //   if (currentPath.includes('/banks/create')) {
-  //     router.push(`/banks/create?roomId=${roomId}`, undefined, { shallow: true });
-  //   } else {
-  //     router.push(`/banks/create?roomId=${roomId}`);
-  //   }
-  // };
-
   const navigateToBankCreation = (roomId) => {
-    console.log('Navigating to bank creation with :', );
-    router.push(`/banks/create?roomId=${roomId}`);
+    console.log('Navigating to bank creation with:', roomId);
+    const destination = `/banks/create${roomId ? `?roomId=${roomId}` : ''}`;
+    router.push(destination);
   };
-
 
   return {
     handleUsersClick,
