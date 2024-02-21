@@ -64,7 +64,7 @@ export default function AddUser({ recharge }) {
 
   return (
     <div>
-      <Box item xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={openModal}
           sx={{ margin: "10px", backgroundColor: "#223354"}}
@@ -81,9 +81,10 @@ export default function AddUser({ recharge }) {
         keepMounted
         onClose={closeModal}
         aria-describedby="alert-dialog-slide-description"
-        component={"form"}
-        onSubmit={handleSubmit(onSubmit)}
+        // component={"form"}
+        // onSubmit={handleSubmit(onSubmit)}
       >
+        <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle
           sx={{
             display: "flex",
@@ -95,7 +96,6 @@ export default function AddUser({ recharge }) {
           Agregar Usuario
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
             <Grid container spacing={2} mt={0}>
               <Grid item xs={12} >
                 <TextField
@@ -176,7 +176,6 @@ export default function AddUser({ recharge }) {
                 />
               </Grid>
             </Grid>
-          </DialogContentText>
         </DialogContent>
         <DialogActions
           sx={{
@@ -194,6 +193,7 @@ export default function AddUser({ recharge }) {
             Agregar
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );

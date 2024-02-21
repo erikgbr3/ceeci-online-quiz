@@ -18,6 +18,7 @@ const CardCourse = () => {
   const [rooms, setRooms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 6;
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   const navigation = useNavigation();
 
@@ -51,6 +52,13 @@ const CardCourse = () => {
     loadRooms();
   }, []);
 
+  // useEffect(() => {
+  //   if (selectedRoom) {
+  //     console.log("Selected Room in CardCourse:", selectedRoom);
+  //     navigation.navigateToBankCreation(selectedRoom.id);
+  //   }
+  // }, [selectedRoom, navigation]);
+
   const updateRooms = (room) => {
     console.log(room);
     const roomsCopy = [...rooms];
@@ -61,9 +69,14 @@ const CardCourse = () => {
     setFilteredRooms([...roomsCopy]);
   }
 
-  const handleRoomsClick = () => {
-    navigation.navigateToBankCreation();
+  const handleRoomsClick = (room) => {
+    console.log("handleRoomsClick executed"); // Añade este log
+    console.log("Clicked Room ID:", room.id);
+    setSelectedRoom(room);
+    console.log("Selected Room after set:", selectedRoom);
+    navigation.navigateToBankCreation(room.id);
   };
+
 
   const renderRooms = () => {
     const indexOfLastRoom = currentPage * roomsPerPage;
@@ -77,7 +90,7 @@ const CardCourse = () => {
         onSaved={loadRooms}
         onUpdate={updateRooms}
         key={room.id}
-        onClick={() => handleRoomsClick()}
+        onClick={() => handleRoomsClick(room)}
       />
     ));
   };
