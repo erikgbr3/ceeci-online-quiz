@@ -23,7 +23,8 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
  
 
 
-  const handleEdit = () => {
+  const handleEdit = (event) => {
+    event.stopPropagation();
     setEdit(true);
   }
 
@@ -31,7 +32,8 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
     setEdit(false);
   }
 
-  const handleDelete = () => {
+  const handleDelete = (event) => {
+    event.stopPropagation();
     onDelete(data.id);
   }
 
@@ -97,7 +99,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
                   <EditUserModal
                   open={edit}
-                  user={data}
+                  room={data}
                   onClose={cancelEdit}
                   onUpdate={onUpdate}
                   />
@@ -106,7 +108,6 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
       </Card>
     </div>
   );
-   
 }
 
 export default ListCategory;

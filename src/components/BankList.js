@@ -6,7 +6,7 @@ import apiClient from '../../apiClient';
 import { useRouter } from 'next/router';
 
 
-const BankList = ({banks, selectedRoom}) => {
+const BankList = ({banks}) => {
   
   const router = useRouter();
 
@@ -59,7 +59,7 @@ const BankList = ({banks, selectedRoom}) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get('/api/banks');
+        const response = await apiClient.get(`/api/banks?roomId=${roomId}`);
         setBankList(response.data);
       } catch (error) {
         console.error('Error fetching banks:', error);
@@ -69,7 +69,7 @@ const BankList = ({banks, selectedRoom}) => {
     };
 
     fetchData();
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     if (dataUpdate) {
@@ -77,8 +77,10 @@ const BankList = ({banks, selectedRoom}) => {
     }
   }, [dataUpdate, currentPage])
 
-  useEffect(() => {   
-    fetchBanks(roomId);
+  useEffect(() => {
+    if (roomId && currentPage) {
+      fetchBanks(roomId, currentPage);
+    }
   }, [roomId, currentPage]);
   
 
@@ -125,7 +127,7 @@ const BankList = ({banks, selectedRoom}) => {
             ))
           ) : (
             <Typography>
-              {selectedRoom
+              {roomId
                 ? 'No hay bancos asociados a esta sala.'
                 : 'Selecciona una sala para ver los bancos asociados.'
               }
