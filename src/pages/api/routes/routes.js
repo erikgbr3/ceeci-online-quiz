@@ -16,6 +16,10 @@ const useNavigation = () => {
     router.push('/banks');
   };
 
+  const handleQuestionsClick = () => {
+    router.push('/questions');
+  };
+
   // const navigateToBankCreation = (roomId) => {
   //   const currentPath = router.asPath;
 
@@ -32,12 +36,20 @@ const useNavigation = () => {
     router.push(`/banks/create?roomId=${roomId}`);
   };
 
+  const navigateToQuestionsCreation = (bankId) => {
+    console.log('Navigating to bank creation with :', );
+    router.push(`/questions/create?bankId=${bankId}`);
+  };
+
 
   return {
     handleUsersClick,
     handleCoursesClick,
     handleQuizzesClick,
-    navigateToBankCreation
+    handleQuestionsClick,
+    
+    navigateToBankCreation,
+    navigateToQuestionsCreation,
   };
 };
 
