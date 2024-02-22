@@ -6,7 +6,7 @@ import apiClient from '../../apiClient';
 import { useRouter } from 'next/router';
 
 
-const BankList = ({banks}) => {
+const BankList = ({banks, selectedRoom}) => {
   
   const router = useRouter();
 
@@ -54,6 +54,22 @@ const BankList = ({banks}) => {
       setLoading(false);
     }
   };
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await apiClient.get('/api/banks');
+        setBankList(response.data);
+      } catch (error) {
+        console.error('Error fetching banks:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (dataUpdate) {
@@ -81,6 +97,10 @@ const BankList = ({banks}) => {
     setCurrentPage(newPage);
   };
 
+  const indexOfLastBank = currentPage * banksPerPage;
+  const indexOfFirstBank = indexOfLastBank - banksPerPage;
+  const currentBanks = bankList.slice(indexOfFirstBank, indexOfLastBank);
+
   return (
     <div>
       <Box>
@@ -95,8 +115,8 @@ const BankList = ({banks}) => {
             />
           {loading ? (
             <Typography>Cargando...</Typography>
-          ) : bankList.length > 0 ? (
-            bankList.map((bank) => (
+          ) : currentBanks.length > 0 ? (
+            currentBanks.map((bank) => (
               <Card key={bank.id} style={cardStyle}>
                 <CardContent>
                   <Typography variant="h6">{bank.name}</Typography>
