@@ -38,11 +38,8 @@ const QuestionList = () => {
       .catch((error) => {
         console.log(error);
       });
-  };
 
-  const loadOptions = () => {
-    console.log('Se recargó');
-    apiClient.get("/api/options")
+      apiClient.get("/api/options")
       .then((response) => {
         console.log("Respuesta de la API:", response.data);
         setOptions(response.data || []);
@@ -52,23 +49,61 @@ const QuestionList = () => {
       });
   };
 
+  // const loadOptions = () => {
+  //   console.log('Se recargó');
+  //   apiClient.get("/api/options")
+  //     .then((response) => {
+  //       console.log("Respuesta de la API:", response.data);
+  //       setOptions(response.data || []);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
 
   useEffect(() => {
     loadQuestions();
-    loadOptions();
+    // loadOptions();
   }, []);
 
-  const updateQuestions = (question) => {
-    console.log(question);
-    const questionsCopy = [...questions];
-    const index = questionsCopy.findIndex(item => item.id == question.id);
-    console.log(index);
-    questionsCopy.splice(index, 1, question)
-    setQuestions([...questionsCopy]);
-  }
+  // const updateQuestions = (question) => {
+  //   console.log(question);
+  //   const questionsCopy = [...questions];
+  //   const index = questionsCopy.findIndex(item => item.id == question.id);
+  //   console.log(index);
+  //   questionsCopy.splice(index, 1, question)
+  //   setQuestions([...questionsCopy]);
+  // }
+
+  // const updateOptions = (option) => {
+  //   console.log(option);
+  //   const optionsCopy = [...options];
+  //   const index = optionsCopy.findIndex(item => item.id == option.id);
+  //   console.log(index);
+  //   optionsCopy.splice(index, 1, option)
+  //   setOptions([...optionsCopy]);
+  // }
 
   // const handleQuestionsClick = () => {
   //   navigation.navigateToQuestionsCreation();
+  // };
+
+  const updateItem = (items, setItems, item) => {
+    console.log(item);
+    const itemsCopy = [...items];
+    const index = itemsCopy.findIndex((i) => i.id === item.id);
+    console.log(index);
+    itemsCopy.splice(index, 1, item);
+    setItems([...itemsCopy]);
+  };
+  
+  // const updateQuestions = (question) => {
+  //   updateItem(questions, setQuestions, question);
+  // };
+  
+  // const updateOptions = (option) => {
+  //   updateItem(options, setOptions, option);
   // };
   
 
@@ -121,7 +156,9 @@ const QuestionList = () => {
 
           onDelete={deleteQuestion}
           onSaved={loadQuestions}
-          onUpdate={updateQuestions}
+          //  onSaved={() => updateItem(questions, setQuestions, question)} // Llamar a la función de actualización
+          // onUpdate={updateItem}
+          onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
           // onClick={() => handleQuestionsClick()}
         />
       </Grid>

@@ -2,27 +2,28 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper  } from "@mui/material";
+import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper, IconButton  } from "@mui/material";
 // import EditComponentModal from "../modals/editComponentModal";
 import WarningIcon from "@mui/icons-material/Warning";
 import apiClient from "../../../apiClient";
+import EditQuestion from "../modals/editQuestion";
 
 
 function QuestionCard({ question, index, options, onDelete, onUpdate }) {
   const [optionsQuestion, setOptions] = React.useState({ ...options });
-  // const [edit, setEdit] = React.useState(false);
+  const [edit, setEdit] = React.useState(false);
 
-  // const handleEdit = () => {
-  //   setEdit(true);
-  // }
+  const handleEdit = () => {
+    setEdit(true);
+  }
 
-  // const cancelEdit = () => {
-  //   setEdit(false);
-  // }
+  const cancelEdit = () => {
+    setEdit(false);
+  }
 
-  // const handleDelete = () => {
-  //   onDelete(data.id);
-  // }
+  const handleDelete = () => {
+    onDelete(question.id);
+  }
 
 
   React.useEffect(() => {
@@ -36,7 +37,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
   }, [options]);
 
   const cardStyle = {
-    marginBottom: '16px',
+    // marginBottom: '16px',
     backgroundColor: '#f5f5f5',
     fontSize: 14,
 
@@ -46,6 +47,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
     listStyleType: 'none',
     marginLeft: '12px',
     marginTop: '8px',
+    // padding: '2px'
   };
 
   const listItemStyle = {
@@ -79,23 +81,23 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
               
               {/* Renderizar las opciones */}
               <ul>
-              {question.QuestionOption.map((option, index) => (
+              {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listItemStyle}>
                   <span style={incisoStyle}>{`${getAlphabetLetter(index)}.`}</span> {option.option1}
                 </div>
               ))}
-              {question.QuestionOption.map((option, index) => (
+              {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listItemStyle}>
                   <span style={incisoStyle}>{`${getAlphabetLetter(index + question.QuestionOption.length)}.`}</span> {option.option2}
                 </div>
               ))}
-              {question.QuestionOption.map((option, index) => (
+              {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listItemStyle}>
                   <span style={incisoStyle}>{`${getAlphabetLetter(index + 2 * question.QuestionOption.length)}.`}</span> {option.option3}
                 </div>
               ))}
 
-              {question.QuestionOption.map((option, index) => (
+              {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listStyle}>La respuesta correcta es: 
                   <span style={incisoStyle}> {option.correctA}</span>
                 </div>
@@ -104,6 +106,30 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
               
             </ul>
           </CardContent>
+          <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
+            <IconButton
+              aria-label="Eliminar"
+              onClick={handleDelete}
+              style={{ color: "red" }}
+              >
+              <DeleteIcon />
+          </IconButton>
+          <IconButton
+              aria-label="Editar"
+              onClick={handleEdit}
+              style={{ color: "blue" }}
+              >
+              <EditIcon />
+          </IconButton>
+
+          
+          </CardActions>
+          <EditQuestion
+            open={edit}
+            question={question}
+            onClose={cancelEdit}
+            onUpdate={onUpdate}
+            />
         </Card>
        </Box>
      </div>
@@ -111,6 +137,8 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
 }
 
 export default QuestionCard;
+
+
 
 
 

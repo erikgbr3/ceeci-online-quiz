@@ -31,7 +31,6 @@ export default function handler (req, res) {
                 'id', 
                 'textQuestion', 
                 'bankId',
-                'categoryId',
               ], // Incluye los atributos necesarios
             },
           ],
