@@ -17,10 +17,14 @@ export default function AddBank ({ recharge }) {
   const { isOpen, openModal, closeModal } = useModal();
   const { register, handleSubmit, reset, } = useForm();
   const router = useRouter();
-  const roomId =  router.query.roomId || null;
+  const roomId = router.query.roomId !== undefined ? router.query.roomId : null;
+
 
   const onSubmitBank = async (data) => {
     try {
+      if (!roomId) {
+        throw new Error('No se proporcionó un valor válido para roomId');
+      }
       // // console.log('SQL antes de la inserción:', `INSERT INTO Banks (name, roomId, createdAt, updatedAt) VALUES ('${data.name}', ${room.Id}, NOW(), NOW());`);
       const response = await apiClient.post("/api/banks", {
         name: data.name,

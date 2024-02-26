@@ -12,7 +12,7 @@ import apiClient from "../../apiClient";
 import useNavigation from "@/pages/api/routes/routes";
 
 function ListCategory({ room, onDelete, onUpdate, onClick }) {
-  const [data, setData] = React.useState({ ...room });
+  const [data, setData] = React.useState({ room });
   const [edit, setEdit] = React.useState(false);
   const [roomss, setRoomss] = React.useState([]);
   const [users, setUsers] = React.useState([]);
@@ -23,7 +23,8 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
  
 
 
-  const handleEdit = () => {
+  const handleEdit = (event) => {
+    event.stopPropagation();
     setEdit(true);
   }
 
@@ -31,15 +32,18 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
     setEdit(false);
   }
 
-  const handleDelete = () => {
+  const handleDelete = (event) => {
+    event.stopPropagation();
     onDelete(data.id);
   }
 
   const handleCardClick = () => {
+    console.log("handleCardClick executed");
     navigateToBankCreation(room.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
   }
 
     useEffect(() => {
+      console.log("ListCategory mounted");
         apiClient.get('api/rooms')
         .then(response => {
             setRoomss(response.data || []);
@@ -77,17 +81,6 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
               <Typography variant="h7" component="h2"  >
                   {room.name}
               </Typography>
-              {/*  <Typography color="textSecondary">
-                  Id: {room.id}
-              </Typography> */}
-
-              {/*   <Typography color="textSecondary">
-                  Id de Usuario: {room.userId}
-              </Typography>*/}
-            
-
-            
-
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                   <IconButton
                       aria-label="Eliminar"
@@ -106,7 +99,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
                   <EditUserModal
                   open={edit}
-                  user={data}
+                  room={data}
                   onClose={cancelEdit}
                   onUpdate={onUpdate}
                   />
@@ -115,7 +108,6 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
       </Card>
     </div>
   );
-   
 }
 
 export default ListCategory;

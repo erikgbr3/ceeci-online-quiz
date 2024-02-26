@@ -159,7 +159,7 @@ const UserTable = () => {
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>NOMBRE</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>EMAIL</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>ROL</TableCell>
-                <TableCell sx={{ color: '#223354', fontWeight: "800", alignItems: "self-end" }}>ACCIONES</TableCell>
+                <TableCell sx={{ color: '#223354', fontWeight: "800", alignItems: "flex-end" }}>ACCIONES</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{renderUsers()}</TableBody>

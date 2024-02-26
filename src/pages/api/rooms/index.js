@@ -74,23 +74,39 @@ const getRooms = async (req, res) => {
     }
 };
 
-const deleteRooms = async (req,res) => {
-    try{
-      const {id} = req.query;
+const deleteRooms = async (req, res) => {
+    try {
+        const { id } = req.query;
 
-        await db.Room.destroy({
-            where: { id: id }
-        })
+        const room = await db.Room.findOne({ where: { id: id } });
+        if (!room) {
+            return res.status(400).json({ error: true, message: 'No se encontró la sala' });
+        }
+
+        const bank = await db.Bank.findOne({ where: { roomId: room.id } });
+        if (bank) {
+            const question = await db.Question.findOne({ where: { bankId: bank.id } });
+            if (question) {
+                const option = await db.Option.findOne({where: {questionId: question.id}});
+                if (option){
+                    await db.Answer.destroy({ where: { optionId: option.id } });
+                    await db.Option.destroy({ where: { questionId: question.id } });
+                }
+                await db.Question.destroy({ where: { bankId: bank.id } });
+            }
+            await db.Bank.destroy({ where: { roomId: room.id } });
+        }
+
+        await db.Room.destroy({ where: { id: room.id } });
 
         res.json({
             message: 'Eliminado'
-        })
-
-      }
-         catch (error){
-            res.status(400).json({ error: "error al momento de borrar el estado"})
+        });
+    } catch (error) {
+        console.error('Error al eliminar la sala:', error);
+        res.status(500).json({ error: 'Error interno del servidor al eliminar la sala', details: error.message });
     }
-}
+};
 
 const updateRooms = async (req,res) => {
 
