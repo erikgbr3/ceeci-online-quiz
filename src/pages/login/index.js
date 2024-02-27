@@ -21,7 +21,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const theme = createTheme();
 
-const LoginPage = () => {
+const LoginPage = ({}) => {
   const router = useRouter();
   const { query } = useRouter();
 
@@ -54,22 +54,6 @@ const LoginPage = () => {
   };
 
   return (
-    // <ThemeProvider theme={theme}>
-    //   <CssBaseline />
-    //   <Container
-    //     component="main"
-    //     maxWidth="xl"
-    //     sx={{
-    //       height: "100vh",
-    //       display: "flex",
-    //       flexDirection: "column",
-    //       alignItems: "center",
-    //       justifyContent: "center",
-    //       backgroundImage: `url('.././imgLogin.png')`,
-    //       backgroundRepeat: "no-repeat",
-    //       backgroundSize: "cover",
-    //     }}
-    //   >
     <Grid container component="main" sx={{ height: '100vh' }}>
       <Grid
         item
@@ -178,29 +162,22 @@ const LoginPage = () => {
           >
             Iniciar sesión
           </Button>
-          {/* <Grid container sx={{ mt: 3, textAlign: "center" }}>
-            <Grid item xs>
-              <Link href="restore" variant="body2">
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </Grid>
-          </Grid> */}
         </Box>
         </Grid>
       </Grid>
-    //   </Container>
-    // </ThemeProvider>
   );
 };
 
 // si logra ser autenticado, regresarlo a la página que intentó acceder
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
- 
-let { p = "http://localhost:3000/home" } = query;
-  if(session?.user?.rol == 'usuario') {
+
+  let { p = "http://localhost:3000/home" } = query;
+  console.log("Original destination:", p);
+
+  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador') {
     p = 'http://localhost:3000/rooms';
-  }
+  } 
 
   if (session) {
     return {

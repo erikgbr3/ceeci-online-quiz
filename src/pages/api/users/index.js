@@ -23,6 +23,7 @@ const listUsers = async (req, res) => {
   try {
     const { name } = req.query;
     const { userId } = req.query;
+    const { rol } = req.query;
     let whereCondition = {}; 
 
     let users = []
@@ -54,6 +55,10 @@ const listUsers = async (req, res) => {
           },
         }],
         
+      };
+    } else if (rol) {
+      whereCondition = {
+        rol: rol,
       };
     }
      users = await db.User.findAll({

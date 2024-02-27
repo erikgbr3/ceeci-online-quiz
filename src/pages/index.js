@@ -17,6 +17,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import { useRouter } from "next/router";
+import withAuth from "@/components/withAuth";
 
 function Home({ user }) {
   const router = useRouter();

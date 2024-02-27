@@ -52,13 +52,6 @@ const CardCourse = () => {
     loadRooms();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedRoom) {
-  //     console.log("Selected Room in CardCourse:", selectedRoom);
-  //     navigation.navigateToBankCreation(selectedRoom.id);
-  //   }
-  // }, [selectedRoom, navigation]);
-
   const updateRooms = (room) => {
     console.log(room);
     const roomsCopy = [...rooms];

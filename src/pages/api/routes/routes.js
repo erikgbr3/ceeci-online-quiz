@@ -1,11 +1,19 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 const useNavigation = () => {
 
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleUsersClick = () => {
-    router.push('/users');
+    if (session?.user?.rol === 'administrador') {
+      router.push('/users');
+    } else {
+      // Acceso denegado para roles diferentes a 'administrador'
+      console.log('Acceso denegado a /users para el rol:', session?.user?.rol);
+      // Puedes redirigir a una página de acceso denegado o realizar otras acciones según tus necesidades.
+    }
   };
 
   const handleCoursesClick = () => {
