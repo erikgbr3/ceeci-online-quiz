@@ -34,7 +34,10 @@ const useNavigation = () => {
     handleUsersClick,
     handleCoursesClick,
     handleQuizzesClick,
-    navigateToBankCreation
+    handleQuestionsClick,
+    
+    navigateToBankCreation,
+    navigateToQuestionsCreation,
   };
 };
 
