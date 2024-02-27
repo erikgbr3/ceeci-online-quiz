@@ -30,11 +30,17 @@ const useNavigation = () => {
     router.push(destination);
   };
 
+  const navigateToQuestionsCreation = (bankId) => {
+    console.log('Navigating to question creation with:', bankId);
+    const destination = `/questions/create${bankId ? `?bankId=${bankId}` : ''}`;
+    router.push(destination);
+  };
+
   return {
     handleUsersClick,
     handleCoursesClick,
     handleQuizzesClick,
-    handleQuestionsClick,
+    // handleQuestionsClick,
     
     navigateToBankCreation,
     navigateToQuestionsCreation,
