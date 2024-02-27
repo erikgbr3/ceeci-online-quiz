@@ -1,14 +1,15 @@
-import { Box, Card, CardContent, Paper, Typography, Switch  } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Paper, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
-import { useEffect, useState } from 'react';
 import AddBank from './modals/AddBank';
 import apiClient from '../../apiClient';
 import { useRouter } from 'next/router';
+import BankCard from './cards/bankCard';
+import useNavigation from '@/pages/api/routes/routes';
 
-
-const BankList = ({banks}) => {
-  
+const BankList = ({ banks }) => {
   const router = useRouter();
+  const navigation = useNavigation();
 
   const [dataUpdate, setDataUpdate] = useState('');
   const { roomId } = router.query;
@@ -18,17 +19,18 @@ const BankList = ({banks}) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const banksPerPage = 6;
+  const [selectedBank, setSelectedBank] = useState(null);
 
   const [bankStates, setBankStates] = useState({});
 
-  const updateDataBanks =() => {
+  const updateDataBanks = () => {
     setDataUpdate(true);
-  }
+  };
 
-  const dataBanksUpdate = () =>{
+  const dataBanksUpdate = () => {
     fetchBanks(roomId, currentPage);
     setDataUpdate(false);
-  }
+  };
 
   const fetchBanks = async (roomId, page) => {
     try {
@@ -60,12 +62,12 @@ const BankList = ({banks}) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         let response;
-        
+
         setLoading(true);
         response = await apiClient.get(`/api/banks?roomId=${roomId}`);
         const fetchedBanks = response.data.reduce((acc, bank) => {
@@ -89,41 +91,33 @@ const BankList = ({banks}) => {
     if (dataUpdate) {
       dataBanksUpdate();
     }
-  }, [dataUpdate, currentPage])
+  }, [dataUpdate, currentPage]);
 
   useEffect(() => {
     if (roomId && currentPage) {
       fetchBanks(roomId, currentPage);
     }
   }, [roomId, currentPage]);
-  
 
   const cardStyle = {
     marginBottom: '16px',
     backgroundColor: '#f5f5f5',
     marginLeft: '90px',
-    marginRight: '90px'
-  };
-
-  const switchContainerStyle = {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  };
-
-  const switchStyle = {
-    marginLeft: 'auto', // Esto coloca el Switch en el lado derecho del contenedor
-  };
-
-  const paperStyle = {
-    padding: '16px',
+    marginRight: '90px',
   };
 
   const totalPages = Math.ceil(bankList.length / banksPerPage);
 
   const changePage = (event, newPage) => {
     setCurrentPage(newPage);
+  };
+
+  const handleBanksClick = (bank) => {
+    console.log("handleBanksClick executed"); // Añade este log
+    console.log("Clicked BAnk ID:", bank.id);
+    setSelectedBank(bank);
+    console.log("Selected Bank after set:", selectedBank);
+    navigation.navigateToQuestionsCreation(bank.id);
   };
 
   const toggleCardEnabled = (bankId) => {
@@ -142,32 +136,27 @@ const BankList = ({banks}) => {
   return (
     <div>
       <Box>
-        <Paper style={paperStyle}>
-          <Typography sx={{ display: "flex", justifyContent: "Center", fontSize: 25, fontWeight: 'bold' }}>
-          Bancos
-        </Typography>
-          <AddBank 
+        <Paper style={{ padding: '16px' }}>
+          <Typography sx={{ display: 'flex', justifyContent: 'Center', fontSize: 25, fontWeight: 'bold' }}>
+            Bancos
+          </Typography>
+          <AddBank
             recharge={() => {
               setBankList(banks);
               updateDataBanks();
-            }} 
+            }}
           />
           {loading ? (
             <Typography>Cargando...</Typography>
           ) : currentBanks.length > 0 ? (
             currentBanks.map((bank) => (
-              <Card key={bank.id} style={cardStyle}>
-                <CardContent style={switchContainerStyle}>
-                  <Typography variant="h6">
-                    {bank.name}
-                  </Typography>
-                  <Switch
-                    checked={bankStates[bank.id]?.isEnabled || false}
-                    onChange={() => toggleCardEnabled(bank.id)}
-                    style={switchStyle}
-                  />
-                </CardContent>
-              </Card>
+              <BankCard 
+                key={bank.id} 
+                bank={bank} 
+                bankStates={bankStates} 
+                toggleCardEnabled={toggleCardEnabled} 
+                onClick={() => handleBanksClick(bank)}
+              />
             ))
           ) : (
             <Typography>
@@ -177,12 +166,8 @@ const BankList = ({banks}) => {
               }
             </Typography>
           )}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={changePage}
-            />
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Pagination count={totalPages} page={currentPage} onChange={changePage} />
           </Box>
         </Paper>
       </Box>
