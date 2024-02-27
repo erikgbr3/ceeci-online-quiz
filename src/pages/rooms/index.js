@@ -1,11 +1,13 @@
-
 import CardCourse from "@/components/roomsCard";
+import withAuth from "@/components/withAuth";
+
 function Rooms () {
+
   return (
     <div>
-    <CardCourse />
+      <CardCourse />
     </div>
   );
 }
 
-export default Rooms;
+export default withAuth(Rooms, ['administrador', 'usuario']);

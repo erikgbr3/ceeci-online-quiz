@@ -72,6 +72,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
     <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <Card variant="outlined" style={{
         width: '250px',
+        height: '150px',
         margin: '10px',
         borderRadius: '15px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',

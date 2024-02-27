@@ -1,5 +1,6 @@
 import React from 'react';
 import UserTable from '@/components/UserTable';
+import withAuth from '@/components/withAuth';
 
 function Users() {
   return (
@@ -7,4 +8,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default withAuth(Users, ['administrador']);

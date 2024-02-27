@@ -19,11 +19,8 @@ import ListItemText from "@mui/material/ListItemText";
 import PeopleIcon from "@mui/icons-material/People";
 import ArticleIcon from '@mui/icons-material/Article';
 import ClassIcon from '@mui/icons-material/Class';
-// import { useRouter } from "next/router";
-// import { useRouter } from "next/navigation";
-
 import { useRouter } from "next/router";
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import ButtonCloseSession from "../ButtonCloseSession";
 import useNavigation from "@/pages/api/routes/routes";
 import { Tooltip } from "@mui/material";
@@ -96,17 +93,15 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({children}) {
-
   const { data: session } = useSession();
-
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
 
   const { 
     handleUsersClick, 
     handleCoursesClick, 
     handleQuizzesClick,
-
   } = useNavigation();
 
   const handleDrawerOpen = () => {
@@ -116,7 +111,6 @@ export default function MiniDrawer({children}) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
 
   return (
     <Box sx={{ display: "flex", overflowX: "auto" }}>
@@ -137,7 +131,7 @@ export default function MiniDrawer({children}) {
           </IconButton>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <Typography variant="h6" noWrap component="div">
-            CEECI
+              CEECI
             </Typography>
             <ButtonCloseSession user={session?.user} />
           </div>
@@ -155,8 +149,34 @@ export default function MiniDrawer({children}) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Usuarios", "Salas", "Examenes"].map(
-            (text, index) => (
+          {session?.user?.rol === 'usuario' ? (
+            <ListItem key="Salas" disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                  padding: 3,
+                }}
+                onClick={handleCoursesClick}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 4 : "auto",
+                    justifyContent: "center",
+                    color: '#223354'
+                  }}
+                >
+                  <Tooltip title="Salas" arrow>
+                    <ClassIcon />
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText primary="Salas" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            ["Usuarios", "Salas"].map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
                   sx={{
@@ -165,11 +185,12 @@ export default function MiniDrawer({children}) {
                     px: 2.5,
                     padding: 3,
                   }}
-
                   onClick={
-                    index === 0 ? handleUsersClick : (
-                      index === 1 ? handleCoursesClick : handleQuizzesClick
-                    )
+                    index === 0
+                      ? () => handleUsersClick(session)
+                      : index === 1
+                      ? handleCoursesClick
+                      : handleQuizzesClick
                   }
                 >
                   <ListItemIcon
@@ -180,35 +201,27 @@ export default function MiniDrawer({children}) {
                       color: '#223354'
                     }}
                   >
-                    {
-                      index === 0 ? ( 
-                        <Tooltip title="Usuarios" arrow>
-                          <PeopleIcon />
-                        </Tooltip> 
-                      ) :  (
-                        index === 1 ? (
-                        <Tooltip title="Salas" arrow>
-                          <ClassIcon />
-                        </Tooltip>
-                        ) : (
-                        <Tooltip title="Examenes" arrow>
-                          <ArticleIcon />
-                        </Tooltip>
-                        )
-                      )
-                    }
-
+                    {index === 0 && session?.user?.rol !== "usuario" && ( 
+                      <Tooltip title="Usuarios" arrow>
+                        <PeopleIcon />
+                      </Tooltip> 
+                    )}
+                    {index === 1 && (
+                      <Tooltip title="Salas" arrow>
+                        <ClassIcon />
+                      </Tooltip>
+                    )}
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
-            )
+            ))
           )}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3}}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-          {children}
+        {children}
       </Box> 
     </Box>
   );

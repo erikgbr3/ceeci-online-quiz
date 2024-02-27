@@ -11,7 +11,7 @@ export  async function middleware(request) {
     if (!session ) {
       return NextResponse.redirect(`http://localhost:3000/login`)
     }
-    
+
     // Si está autenticado, continuar con la petición
     return NextResponse.next();
 }
@@ -21,14 +21,7 @@ export const config = {
   matcher: [
     // '/home/:path*',
     '/home/:path*',
-    // '/login',
     '/users',
-    '/quiz',
-    // '/devices',
-    // '/components',
-    // '/homeEmployee',
-    // '/ordersEmployee',
-    // '/devicesEmployee',
-    // '/componentsEmployee'
+    '/rooms',
   ]
 } 
