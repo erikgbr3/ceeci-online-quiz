@@ -12,6 +12,8 @@ export default function handler(req, res) {
             return deleteRooms(req, res);
         case 'PUT':
             return updateRooms(req,res);
+        case 'PATCH':
+            return patchRooms(req, res);
         default:
             res.status(400).json({error: true, message:'Petición errónea, utiliza Read,Post,Put o Delete'});
     }
@@ -48,22 +50,25 @@ const addRooms = async (req, res) =>  {
 }
 
 const getRooms = async (req, res) => {
-    const userId = req.query.userId;
+    const { userId, enabled } = req.query;
 
     try {
         let rooms;
 
         if (userId) {
-            // Si se proporciona userId, buscar las salas asociadas a ese usuario
             rooms = await db.Room.findAll({
                 where: {
                     userId: userId
                 },
             });
-        } else {
-            // Si no se proporciona userId, obtener todas las salas
+        } else if (enabled !== undefined) {
             rooms = await db.Room.findAll({
+                where: {
+                    enabled: enabled === 'true'
+                },
             });
+        } else {
+            rooms = await db.Room.findAll();
         }
 
         // Devolver las salas encontradas
@@ -140,3 +145,36 @@ const updateRooms = async (req,res) => {
       )
     }
 }
+
+const patchRooms = async (req,res) => {
+    try{
+        let {id} = req.query;
+        await db.Room.update({...req.body},
+            {
+            where :{ id : id }
+        })
+        res.json({
+            message: 'Cambiado  '
+        })
+
+      }
+      catch (error) {
+
+        console.log(error);
+
+        let errors = [];
+        if (error.errors){
+            errors = error.errors.map((item) => ({
+                error: item.message,
+                field: item.path,
+                }));
+        }
+      return res.status(400).json( {
+        error: true,
+        message: `Ocurrió un error al procesar la petición: ${error.message}`,
+        errors,
+        } 
+      )
+    }
+}
+

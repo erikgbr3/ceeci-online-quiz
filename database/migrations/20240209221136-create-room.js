@@ -12,6 +12,11 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      enabled: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
