@@ -33,6 +33,10 @@ module.exports = {
           key: 'id'
         }
       },
+      selection: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
