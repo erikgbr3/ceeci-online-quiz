@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Switch, Typography } from '@mui/material';
-import useNavigation from '@/pages/api/routes/routes';
 
-const BankCard = ({ bank, bankStates, toggleCardEnabled }) => {
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, Switch, Typography, Tooltip } from '@mui/material';
+import useNavigation from '@/pages/api/routes/routes';
+import apiClient from '../../../apiClient';
+import { useSession } from 'next-auth/react';
+
+const BankCard = ({ bank }) => {
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -16,10 +19,41 @@ const BankCard = ({ bank, bankStates, toggleCardEnabled }) => {
 
   const { navigateToQuestionsCreation } = useNavigation();
 
+  const [switchState, setSwitchState] = useState(bank.enabled);
+  const { data: session } = useSession();
+
+
+  useEffect(() => {
+    setSwitchState(bank.enabled); // Actualiza el estado cuando cambia 'enabled' del banco
+  }, [bank.enabled]);
+
   const handleCardClick = () => {
     console.log("handleCardClick executed");
     navigateToQuestionsCreation(bank.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
   }
+
+  const handleSwitchClick = (event) => {
+    event.stopPropagation();
+
+    const newSwitchState = !switchState;
+
+    // Actualiza el estado local del switch
+    setSwitchState(newSwitchState);
+
+    // Realiza una solicitud PATCH para actualizar el valor en la base de datos
+    apiClient
+      .patch(`/api/banks?id=${bank.id}`, { enabled: newSwitchState })
+      .then((response) => {
+        // Maneja la respuesta exitosa si es necesario
+        console.log("API response", response.data);
+        // Puedes omitir esta línea si estás confiado en que la API actualizó correctamente el valor
+        // setSwitchState(newSwitchState); 
+      })
+      .catch((error) => {
+        // Maneja el error si es necesario
+        console.error(error);
+      });
+  };
 
   const switchContainerStyle = {
     position: 'relative',
@@ -46,11 +80,15 @@ const BankCard = ({ bank, bankStates, toggleCardEnabled }) => {
               {bank.name}
             </Typography>
           </div>
-          <Switch
-            checked={bankStates[bank.id]?.isEnabled || false}
-            onChange={() => toggleCardEnabled(bank.id)}
-            style={switchStyle}
-          />
+          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+          <Tooltip title="Habilitar/Inhabilitar">
+            <Switch
+              style={switchStyle}
+              checked={switchState}
+              onChange={handleSwitchClick}
+            />
+          </Tooltip>
+          )}
         </CardContent>
       </Card>
     

@@ -12,6 +12,8 @@ export default function handler(req, res) {
       return deleteBanks(req, res);
     case 'PUT':
       return updateBank(req,res);
+    case 'PATCH':
+      return patchBanks(req, res);
     default:
       res.status(400).json({error: true, message:'Petición errónea, utiliza Read,Post,Put o Delete'});
   }
@@ -48,43 +50,50 @@ const addBanks = async (req, res) =>  {
 }
 
 const getBanks = async (req, res) => {
-  const roomId = req.query.roomId;
+  const {roomId, enabled} = req.query;
 
   try{
-    //los datos vienen del req.body
-    let banks;
-    //guardar cliente
-    if(roomId){
-      banks = await db.Bank.findAll({
-        where: {
-          roomId: roomId
-        },
-        include: ['RoomBank']
-      });
-    }else {
-      banks = await db.Bank.findAll({
-        include: ['RoomBank']
-      });
-    }
+      //los datos vienen del req.body
+      let banks;
+      //guardar cliente
+      if(roomId){
+          banks = await db.Bank.findAll({
+              where: {
+                  roomId: roomId
+              },
+              include: ['RoomBank']
+          });
+      }else if(enabled !== undefined) {
+          banks = await db.Bank.findAll({
+              where: {
+                  enabled: enabled === 'true'
+              }
+          })
+      }else {
+          banks = await db.Bank.findAll({
+              include: ['RoomBank']
+          });
+          
+      }
 
-    return res.json(banks)
-    
+      return res.json(banks)
+  
   }catch(error){
-    console.log(error);
-    let errors = []
+      console.log(error);
+      let errors = []
 
-    if(error.errors){
-      //extrae la info
-      errors = error.errors.map((item) => ({
-      error: item.message, 
-        field: item.path,
-      }));
-    }
+      if(error.errors){
+          //extrae la info
+          errors = error.errors.map((item) => ({
+              error: item.message, 
+              field: item.path,
+          }));
+      }
 
-    return res.status(400).json({
-      message: `Ocurrió un error al procesar la petición: ${error.message}`,
-      errors,
-    })
+      return res.status(400).json({
+          message: `Ocurrió un error al procesar la petición: ${error.message}`,
+          errors,
+      })
   }
 }
 
@@ -133,5 +142,37 @@ const updateBank = async (req,res) => {
       message: `Ocurrió un error al procesar la petición: ${error.message}`,
       errors,
     })
+  }
+}
+
+const patchBanks = async (req,res) => {
+  try{
+      let {id} = req.query;
+      await db.Bank.update({...req.body},
+          {
+          where :{ id : id }
+      })
+      res.json({
+          message: 'Cambiado  '
+      })
+
+    }
+    catch (error) {
+
+      console.log(error);
+
+      let errors = [];
+      if (error.errors){
+          errors = error.errors.map((item) => ({
+              error: item.message,
+              field: item.path,
+              }));
+      }
+    return res.status(400).json( {
+      error: true,
+      message: `Ocurrió un error al procesar la petición: ${error.message}`,
+      errors,
+      } 
+    )
   }
 }
