@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   Answer.init({
     userId: DataTypes.INTEGER,
     questionId: DataTypes.INTEGER,
-    optionId: DataTypes.INTEGER
+    optionId: DataTypes.INTEGER,
+    selection: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Answer',

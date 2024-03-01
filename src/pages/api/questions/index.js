@@ -28,11 +28,11 @@ const getQuestions = async (req, res) => {
               where: {
                   bankId: bankId
               },
-              include: ['QuestionBank', 'QuestionOption']
+              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
           });
       }else {
           questions = await db.Question.findAll({
-              include: ['QuestionBank', 'QuestionOption']
+              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
           });
           
       }

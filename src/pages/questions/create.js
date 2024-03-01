@@ -9,7 +9,7 @@ const Questions = () => {
   const [questions, setQuestions] = useState([]);
   
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = async (bankId) => {
     try {
       const response = await apiClient.get(`/api/questions?bankId=${bankId}`);
       setQuestions(response.data);

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Switch, Typography, Tooltip } from '@mui/material';
 import useNavigation from '@/pages/api/routes/routes';
@@ -7,6 +8,15 @@ import { useSession } from 'next-auth/react';
 const BankCard = ({ bank }) => {
 
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   const { navigateToQuestionsCreation } = useNavigation();
 
   const [switchState, setSwitchState] = useState(bank.enabled);
@@ -61,7 +71,12 @@ const BankCard = ({ bank }) => {
       <Card key={bank.id} style={{ marginBottom: '16px', backgroundColor: '#f5f5f5', marginLeft: '90px', marginRight: '90px' }}>
         <CardContent style={switchContainerStyle}>
           <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
-            <Typography variant="h6">
+            <Typography 
+              variant="h6"
+              style={{ color: isHovered ? 'gray' : 'black' }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
               {bank.name}
             </Typography>
           </div>

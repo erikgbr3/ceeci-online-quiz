@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper, IconButton  } from "@mui/material";
+import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper, IconButton, Tooltip  } from "@mui/material";
 // import EditComponentModal from "../modals/editComponentModal";
 import WarningIcon from "@mui/icons-material/Warning";
 import apiClient from "../../../apiClient";
@@ -107,22 +107,25 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
             </ul>
           </CardContent>
           <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
-            <IconButton
-              aria-label="Eliminar"
-              onClick={handleDelete}
-              style={{ color: "red" }}
-              >
-              <DeleteIcon />
+          
+          <IconButton
+            aria-label="Eliminar"
+            onClick={handleDelete}
+            style={{ color: "red" }}
+            >
+              <Tooltip title="Eliminar" arrow>
+                <DeleteIcon />
+              </Tooltip> 
           </IconButton>
           <IconButton
-              aria-label="Editar"
-              onClick={handleEdit}
-              style={{ color: "blue" }}
-              >
-              <EditIcon />
+            aria-label="Editar"
+            onClick={handleEdit}
+            style={{ color: "blue" }}
+            >
+              <Tooltip title="Editar" arrow>
+                <EditIcon />
+              </Tooltip>
           </IconButton>
-
-          
           </CardActions>
           <EditQuestion
             open={edit}
@@ -137,8 +140,4 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
 }
 
 export default QuestionCard;
-
-
-
-
 
