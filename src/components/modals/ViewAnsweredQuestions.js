@@ -23,19 +23,21 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
   console.log('User Answers in ViewAnsweredQuestions:', userAnswers);
   
   const [answeredUsers, setAnsweredUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
 
-  const [scrollPosition, setScrollPosition] = useState(0);
+  // const [scrollPosition, setScrollPosition] = useState(0);
 
 
-  useEffect(() => {
-    const fetchAnsweredUsers = async () => {
-      console.log('Executing fetchAnsweredUsers');
-      try {
+  const fetchAnsweredUsers = async () => {
+    console.log('Executing fetchAnsweredUsers');
+    try {
+      setLoading(true);
 
-        const response = await apiClient.get(`/api/users?questionId=${questionId}`);
-        const data = response.data;
+      const response = await apiClient.get(`/api/users?questionId=${questionId}`);
+      const data = response.data;
 
-        console.log('Fetched Answered Users Data:', data);
+      console.log('Fetched Answered Users Data:', data);
 
       const usersWithAnswer = userAnswers.filter(answer => answer.UserAnswer && answer.UserAnswer.length > 0);
       const filteredUsers = usersWithAnswer.filter(answer => answer.UserAnswer.some(userAnswer => userAnswer.questionId === question.id));
@@ -43,25 +45,37 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
 
     } catch (error) {
       console.error('Error fetching answered users:', error);
-    } 
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handleRefresh = async () => {
+    try {
+      setLoading(true);
+      await fetchAnsweredUsers();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchAnsweredUsers();
   }, [questionId, userAnswers]);
 
-  console.log('Answered Users:', answeredUsers);
+  
 
-  const handleScroll = (event) => {
-    setScrollPosition(event.target.scrollTop);
+  // const handleScroll = (event) => {
+  //   setScrollPosition(event.target.scrollTop);
 
-    const triggerFetchThreshold = 100;
+  //   const triggerFetchThreshold = 100;
 
-    if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - triggerFetchThreshold) {
-      // Realiza la carga adicional de datos
-      // Puedes llamar a la función fetchAnsweredUsers nuevamente o realizar otras acciones
-      fetchAnsweredUsers();
-    }
-  };
+  //   if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - triggerFetchThreshold) {
+  //     // Realiza la carga adicional de datos
+  //     // Puedes llamar a la función fetchAnsweredUsers nuevamente o realizar otras acciones
+  //     fetchAnsweredUsers();
+  //   }
+  // };
   
 
   const formatDateTime = (dateTimeString) => {
@@ -83,12 +97,12 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
       open={open} 
       onClose={onClose} 
       component="form"
-      scroll="paper"
-      PaperProps={{
-        style: {
-          maxHeight: "80vh",
-        },
-      }}
+      // scroll="paper"
+      // PaperProps={{
+      //   style: {
+      //     maxHeight: "80vh",
+      //   },
+      // }}
     >
       <DialogTitle
         color="textSecondary"
@@ -101,11 +115,18 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
       >
         {`Usuarios que respondieron a la pregunta: ${question.textQuestion}`}
       </DialogTitle>
-      <DialogContent onScroll={handleScroll} id="scrollable-content">
-        <DialogContentText>
-          <Grid container spacing={2} mt={0}>
-            <Table aria-label="User Table">
-              <TableHead>
+      
+      {/* <DialogContent onScroll={handleScroll} id="scrollable-content"> */}
+      <DialogContent>
+        {loading ? (
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress size={50} />
+            </div>
+          ) : (
+            <DialogContentText>
+              <Grid container spacing={2} mt={0}>
+                <Table aria-label="User Table">
+                <TableHead>
                 <TableRow>
                   <TableCell sx={{ color: '#223354', fontWeight: "800" }}>Nombre</TableCell>
                   <TableCell sx={{ color: '#223354', fontWeight: "800" }}>Fecha y Hora</TableCell>
@@ -129,9 +150,10 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
                   </TableRow>
                 )}
               </TableBody>
-            </Table>
-          </Grid>
-        </DialogContentText>
+                </Table>
+              </Grid>
+            </DialogContentText>
+          )}
       </DialogContent>
       <DialogActions
         sx={{
@@ -142,6 +164,9 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
           marginBottom: "5px",
         }}
       >
+        <IconButton onClick={handleRefresh} disabled={loading} color="primary">
+          <RefreshIcon />
+        </IconButton>
         <Button
           onClick={onClose}
           variant="contained"
