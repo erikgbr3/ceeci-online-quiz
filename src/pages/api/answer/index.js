@@ -20,18 +20,9 @@ const getAnswers = async (req, res) => {
     try{
         //los datos vienen del req.body
         console.log(req.body);
-        
-        const { questionId } = req.query;
 
-        if (!questionId) {
-            return res.status(400).json({
-                message: 'Se requiere el parámetro questionId.',
-            });
-        }
-
-        //guardar cliente
         const answer = await db.Answer.findAll({
-            attributes: ['selection','userId', 'questionId', 'optionId']
+            attributes: ['selection','userId', 'questionId', 'optionId'],
         });
         return res.json(answer)
     

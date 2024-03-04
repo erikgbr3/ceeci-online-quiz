@@ -7,11 +7,19 @@ import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Gri
 import WarningIcon from "@mui/icons-material/Warning";
 import apiClient from "../../../apiClient";
 import EditQuestion from "../modals/editQuestion";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import ViewAnsweredQuestions from "../modals/ViewAnsweredQuestions";
 
 
-function QuestionCard({ question, index, options, onDelete, onUpdate }) {
+function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswers }) {
+  console.log('Question:', question);
+  console.log('Options:', options);
+  console.log('User Answers:', userAnswers);
   const [optionsQuestion, setOptions] = React.useState({ ...options });
   const [edit, setEdit] = React.useState(false);
+  const [viewUsers, setViewUsers] = React.useState(false);
+  const isQuestionAnswered = userAnswers.some(answer => answer.questionId === question.id);
+  
 
   const handleEdit = () => {
     setEdit(true);
@@ -21,10 +29,17 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
     setEdit(false);
   }
 
+  const handleViewUsers = () => {
+    setViewUsers(true);
+  }
+
+  const cancelView = () => {
+    setViewUsers(false);
+  }
+
   const handleDelete = () => {
     onDelete(question.id);
   }
-
 
   React.useEffect(() => {
     apiClient.get('api/options')
@@ -102,9 +117,13 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
                   <span style={incisoStyle}> {option.correctA}</span>
                 </div>
               ))}
-
-              
             </ul>
+            {/* Mostrar mensaje si la pregunta ya ha sido respondida */}
+            {isQuestionAnswered && (
+              <div style={listStyle}>
+                <span style={incisoStyle}>Esta pregunta ya ha sido respondida</span>
+              </div>
+            )}
           </CardContent>
           <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
           
@@ -126,13 +145,28 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
                 <EditIcon />
               </Tooltip>
           </IconButton>
+          <IconButton
+            aria-label="Respondida por:"
+            onClick={handleViewUsers}
+            style={{ color: "blue" }}
+            >
+              <Tooltip title="Respondida por:" arrow>
+                <RemoveRedEyeIcon />
+              </Tooltip>
+          </IconButton>
           </CardActions>
           <EditQuestion
             open={edit}
             question={question}
             onClose={cancelEdit}
             onUpdate={onUpdate}
-            />
+          />
+          <ViewAnsweredQuestions
+            open={viewUsers}
+            question={question}
+            userAnswers={userAnswers}
+            onClose={cancelView}
+          />
         </Card>
        </Box>
      </div>

@@ -28,6 +28,7 @@ const QuestionList = () => {
   const [questionStates, setQuestionStates] = useState({});
     // Estado para actualizar la información de los bancos
   const [dataUpdate, setDataUpdate] = useState('');
+  const [userAnswers, setUserAnswers] = useState([]);
 
 
   // // Función para indicar que se deben actualizar los datos de los bancos
@@ -122,6 +123,10 @@ const QuestionList = () => {
         // Actualiza la lista de bancos con los datos obtenidos
         setQuestionStates(fetchedQuestions);
         setQuestions(response.data);
+        // Obtiene las respuestas de los usuarios
+        const userAnswersResponse = await apiClient.get('/api/users');
+        setUserAnswers(userAnswersResponse.data || []);
+
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
@@ -245,7 +250,7 @@ const QuestionList = () => {
           // onUpdate={updateItem}
           onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
           questionStates={questionStates} 
-
+          userAnswers={userAnswers}  
         />
       </Grid>
       
