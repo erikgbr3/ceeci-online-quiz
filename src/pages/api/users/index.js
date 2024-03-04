@@ -24,6 +24,8 @@ const listUsers = async (req, res) => {
     const { name } = req.query;
     const { userId } = req.query;
     const { rol } = req.query;
+    const { questionId } = req.query;
+
     let whereCondition = {}; 
 
     let users = []
@@ -33,7 +35,8 @@ const listUsers = async (req, res) => {
       where: {
           id:userId,
       },
-      attributes: ['id', 'name', 'lastName', 'email', 'password', 'rol']
+      attributes: ['id', 'name', 'lastName', 'email', 'password', 'rol'],
+      include: ['UserAnswer']
       });
 
       //console.log(users);
@@ -61,9 +64,15 @@ const listUsers = async (req, res) => {
         rol: rol,
       };
     }
+
+    if (questionId) {
+      whereCondition['$UserAnswer.questionId$'] = { [Op.eq]: questionId };
+    }
+    
      users = await db.User.findAll({
       where: whereCondition,
-      attributes: ['id','name', 'lastName', 'email', 'password', 'rol']
+      attributes: ['id','name', 'lastName', 'email', 'password', 'rol'],
+      include: ['UserAnswer']
     });
 
     return res.json(users);

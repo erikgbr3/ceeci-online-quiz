@@ -28,6 +28,7 @@ const QuestionList = () => {
   const [questionStates, setQuestionStates] = useState({});
     // Estado para actualizar la información de los bancos
   const [dataUpdate, setDataUpdate] = useState('');
+  const [userAnswers, setUserAnswers] = useState([]);
 
   const [switchStates, setSwitchStates] = useState({});
   const { data: session } = useSession();
@@ -45,6 +46,7 @@ const QuestionList = () => {
     setDataUpdate(false);
   };
 
+  
   // Función asincrónica para obtener la lista de preguntas desde el servidor
   const fetchQuestions = async (bankId, page) => {
     try {
@@ -82,6 +84,7 @@ const QuestionList = () => {
       setLoading(false);
     }
   };
+
 
   // Efecto que se ejecuta cuando cambia bankId
   // useEffect(() => {
@@ -131,6 +134,29 @@ const QuestionList = () => {
       fetchQuestions(bankId, currentPage);
     }
   }, [bankId]);
+
+
+  // const updateQuestions = (question) => {
+  //   console.log(question);
+  //   const questionsCopy = [...questions];
+  //   const index = questionsCopy.findIndex(item => item.id == question.id);
+  //   console.log(index);
+  //   questionsCopy.splice(index, 1, question)
+  //   setQuestions([...questionsCopy]);
+  // }
+
+  // const updateOptions = (option) => {
+  //   console.log(option);
+  //   const optionsCopy = [...options];
+  //   const index = optionsCopy.findIndex(item => item.id == option.id);
+  //   console.log(index);
+  //   optionsCopy.splice(index, 1, option)
+  //   setOptions([...optionsCopy]);
+  // }
+
+  // const handleQuestionsClick = () => {
+  //   navigation.navigateToQuestionsCreation();
+  // };
 
   const updateItem = (items, setItems, item) => {
     console.log(item);
@@ -219,6 +245,7 @@ const QuestionList = () => {
           onSaved={fetchQuestions}
           onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
           questionStates={questionStates} 
+          userAnswers={userAnswers}  
           switchState={switchStates[question.id]}
         />
       </Grid>
@@ -241,8 +268,7 @@ const QuestionList = () => {
               />
             )}
           </Grid>
-
-          {loading ? (
+           {loading ? (
               <Typography>Cargando...</Typography>
             ) : (
               <React.Fragment>
@@ -266,7 +292,6 @@ const QuestionList = () => {
                 )}
               </React.Fragment>
             )}
-        
       </Paper>
     </Box>
   );

@@ -5,13 +5,21 @@ import { Card, CardActions, CardContent, Typography, Box, IconButton, Tooltip, S
 // import EditComponentModal from "../modals/editComponentModal";
 import apiClient from "../../../apiClient";
 import EditQuestion from "../modals/editQuestion";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import ViewAnsweredQuestions from "../modals/ViewAnsweredQuestions";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 
-function QuestionCard({ question, index, options, onDelete, onUpdate }) {
+function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswers }) {
+  console.log('Question:', question);
+  console.log('Options:', options);
+  console.log('User Answers:', userAnswers);
   const [optionsQuestion, setOptions] = React.useState({ ...options });
   const [edit, setEdit] = React.useState(false);
+  const [viewUsers, setViewUsers] = React.useState(false);
+  const isQuestionAnswered = userAnswers.some(answer => answer.questionId === question.id);
+  
 
   const [switchState, setSwitchState] = useState(question.enabled);
   const { data: session } = useSession();
@@ -26,6 +34,14 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
 
   const cancelEdit = () => {
     setEdit(false);
+  }
+
+  const handleViewUsers = () => {
+    setViewUsers(true);
+  }
+
+  const cancelView = () => {
+    setViewUsers(false);
   }
 
   const handleDelete = () => {
@@ -151,6 +167,43 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
                 </div>
               ))}
             </ul>
+            {/* Mostrar mensaje si la pregunta ya ha sido respondida */}
+            {isQuestionAnswered && (
+              <div style={listStyle}>
+                <span style={incisoStyle}>Esta pregunta ya ha sido respondida</span>
+              </div>
+            )}
+          </CardContent>
+          <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
+          
+          <IconButton
+            aria-label="Eliminar"
+            onClick={handleDelete}
+            style={{ color: "red" }}
+            >
+              <Tooltip title="Eliminar" arrow>
+                <DeleteIcon />
+              </Tooltip> 
+          </IconButton>
+          <IconButton
+            aria-label="Editar"
+            onClick={handleEdit}
+            style={{ color: "blue" }}
+            >
+              <Tooltip title="Editar" arrow>
+                <EditIcon />
+              </Tooltip>
+          </IconButton>
+          <IconButton
+            aria-label="Respondida por:"
+            onClick={handleViewUsers}
+            style={{ color: "blue" }}
+            >
+              <Tooltip title="Respondida por:" arrow>
+                <RemoveRedEyeIcon />
+              </Tooltip>
+          </IconButton>
+          </CardActions>
 
           {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
             <>
@@ -181,7 +234,13 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
             question={question}
             onClose={cancelEdit}
             onUpdate={onUpdate}
-            />
+          />
+          <ViewAnsweredQuestions
+            open={viewUsers}
+            question={question}
+            userAnswers={userAnswers}
+            onClose={cancelView}
+          />
         </Card>
        </Box>
      </div>
