@@ -8,6 +8,7 @@ import apiClient from "../../apiClient";
 import AddQuestion from "./modals/AddQuestion";
 import QuestionCard from "./cards/questionCard";
 import { useRouter } from 'next/router';
+import QuestionCardStudent from "./cards/questionCardStudent";
 
 
 const QuestionList = () => {
@@ -43,28 +44,6 @@ const QuestionList = () => {
   };
 
 
-  // const loadQuestions = () => {
-  //   console.log('Se recargó');
-  //   apiClient.get("/api/questions")
-  //     .then((response) => {
-  //       console.log("Respuesta de la API:", response.data);
-  //       setQuestions(response.data || []);
-  //       setFilteredQuestions(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-  //     apiClient.get("/api/options")
-  //     .then((response) => {
-  //       console.log("Respuesta de la API:", response.data);
-  //       setOptions(response.data || []);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
   // Función asincrónica para obtener la lista de preguntas desde el servidor
   const fetchQuestions = async (bankId, page) => {
     try {
@@ -98,12 +77,6 @@ const QuestionList = () => {
       setLoading(false);
     }
   };
-
-  
-
-  // useEffect(() => {
-  //   loadQuestions();
-  // }, []);
 
 
   // Efecto que se ejecuta cuando cambia bankId
@@ -150,9 +123,6 @@ const QuestionList = () => {
       fetchQuestions(bankId, currentPage);
     }
   }, [bankId, currentPage]);
-
-
-
 
 
   // const updateQuestions = (question) => {
@@ -279,13 +249,7 @@ const QuestionList = () => {
               }}
             />
           </Grid>
-        
-          {/* <Grid container spacing={2} sx={{ display: 'flex' }} >
-            {renderQuestions()}
-          </Grid> */}
-
-          {/* Condición de carga: Si está cargando, muestra un mensaje */}
-          {loading ? (
+           {loading ? (
               <Typography>Cargando...</Typography>
             ) : (
               <React.Fragment>
@@ -309,7 +273,6 @@ const QuestionList = () => {
                 )}
               </React.Fragment>
             )}
-        
       </Paper>
     </Box>
   );

@@ -30,13 +30,21 @@ function QuestionCardStudent({ question, index, options }) {
       if (session && session.user && session.user.id) {
         // Establece el ID de usuario en el estado
         setUserId(session.user.id);
-      } else {
-        console.error('Sesión de usuario no disponible');
+      // Carga inicial de preguntas respondidas por el usuario actual desde la base de datos
+      try {
+        const response = await apiClient.get(`/api/answer?userId=${session.user.id}`);
+        const answeredQuestionIds = response.data.map(answer => answer.questionId);
+        setAnsweredQuestions(answeredQuestionIds);
+      } catch (error) {
+        console.error('Error al obtener preguntas respondidas desde la base de datos:', error);
       }
+    } else {
+      console.error('Sesión de usuario no disponible');
     }
+  }
 
-    getUserId();
-  }, []);
+  getUserId();
+}, []);
   
   useEffect(() => {
     // Obtener las respuestas de la base de datos al cargar la página
@@ -60,14 +68,16 @@ function QuestionCardStudent({ question, index, options }) {
       .catch(error => {
         console.log(error);
       });
-  }, [question.id]);
 
-  useEffect(() => {
-    // Obtener las preguntas contestadas del almacenamiento local al cargar la página
-    const storedAnsweredQuestions = localStorage.getItem('answeredQuestions');
-    const answeredQuestionIds = storedAnsweredQuestions ? JSON.parse(storedAnsweredQuestions) : [];
-    setAnsweredQuestions(answeredQuestionIds);
-  }, []);
+      setAnsweredQuestions([]);
+  }, [question.id, userId]);
+
+  // useEffect(() => {
+  //   // Obtener las preguntas contestadas del almacenamiento local al cargar la página
+  //   const storedAnsweredQuestions = localStorage.getItem('answeredQuestions');
+  //   const answeredQuestionIds = storedAnsweredQuestions ? JSON.parse(storedAnsweredQuestions) : [];
+  //   setAnsweredQuestions(answeredQuestionIds);
+  // }, []);
 
   const handleAnswerChange = (event) => {
     // setSelectedAnswer(event.target.value);
@@ -100,7 +110,7 @@ function QuestionCardStudent({ question, index, options }) {
         setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionId]);
 
         // Actualizar localStorage con las preguntas contestadas
-        localStorage.setItem('answeredQuestions', JSON.stringify([...answeredQuestions, question.id]));
+        // localStorage.setItem('answeredQuestions', JSON.stringify([...answeredQuestions, question.id]));
 
         Swal.fire({
           position: 'center',
