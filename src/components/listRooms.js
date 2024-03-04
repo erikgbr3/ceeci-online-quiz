@@ -1,27 +1,30 @@
 import * as React from "react";
-import { TableRow, TableCell, IconButton, styled, Avatar, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import { IconButton, Typography, Switch, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea } from '@mui/material';
-import { useState, useEffect } from 'react';
-import EditUserModal from "./modals/editRoomModal";
+import { useEffect } from 'react';
 import apiClient from "../../apiClient";
 import useNavigation from "@/pages/api/routes/routes";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 function ListCategory({ room, onDelete, onUpdate, onClick }) {
-  const [data, setData] = React.useState({ room });
+  const [data, setData] = React.useState( {room} );
   const [edit, setEdit] = React.useState(false);
-  const [roomss, setRoomss] = React.useState([]);
+  //const [roomss, setRoomss] = React.useState([]);
   const [users, setUsers] = React.useState([]);
+  const [switchState, setSwitchState] = useState(room.enabled);
+  const { data: session } = useSession();
 
   const { navigateToBankCreation } = useNavigation();
   
-  const roomUser = roomss.find(item => item.id === data.id)?.roomUser;
+  //const roomUser = roomss.find(item => item.id === data.id)?.roomUser;
+  
  
-
+  useEffect(() => {
+    console.log("Switch State:", switchState);
+  }, [switchState]);
 
   const handleEdit = (event) => {
     event.stopPropagation();
@@ -39,22 +42,28 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
   const handleCardClick = () => {
     console.log("handleCardClick executed");
-    navigateToBankCreation(room.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
+    navigateToBankCreation(room.id);
   }
-
-    useEffect(() => {
-      console.log("ListCategory mounted");
-        apiClient.get('api/rooms')
-        .then(response => {
-            setRoomss(response.data || []);
-            setData({ ...room });
-
-        })
-        .catch(error => {
-            console.log(error);
-        });
-
-    }, [room]);
+  
+  const handleSwitchClick = (event) => {
+    event.stopPropagation();
+  
+    const newSwitchState = !switchState;
+    console.log("New Switch State:", newSwitchState);
+  
+    // Realiza una solicitud PATCH para actualizar el valor en la base de datos
+    apiClient
+      .patch(`api/rooms?id=${room.id}`, { enabled: newSwitchState })
+      .then((response) => {
+        // Maneja la respuesta exitosa si es necesario
+        console.log("API response", response.data);
+        setSwitchState(newSwitchState);
+      })
+      .catch((error) => {
+        // Maneja el error si es necesario
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
     apiClient.get('api/users')
@@ -67,45 +76,57 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
   }, []);
 
+  const switchContainerStyle = {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  };
+
+  const switchStyle = {
+    marginLeft: 'auto',
+  };
+
+  const iconButtonStyle = {
+    textAlign: 'center'
+  }
+
 
   return (
-    <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
+    <div onClick={handleCardClick} style={{ display: 'flex', flexWrap: 'wrap' }}>
       <Card variant="outlined" style={{
-        width: '250px',
+        width: '310px',
         height: '150px',
         margin: '10px',
         borderRadius: '15px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        cursor: 'pointer', // Cambiar el cursor cuando se pasa sobre la tarjeta
+        cursor: 'pointer', 
       }}>
-          <CardContent style={{ textAlign: 'center' }}>
-              <Typography variant="h7" component="h2"  >
-                  {room.name}
+          <CardContent style={switchContainerStyle}>
+            <div>
+              <Typography variant="h7" component="h2" style={{ flex: 1 }}>
+                {room.name}
               </Typography>
-              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                  <IconButton
-                      aria-label="Eliminar"
-                      onClick={handleDelete}
-                      style={{ color: "red" }}
-                      >
-                      <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                      aria-label="Editar"
-                      onClick={handleEdit}
-                      style={{ color: "blue" }}
-                      >
-                      <EditIcon />
-                  </IconButton>
-
-                  <EditUserModal
-                  open={edit}
-                  room={data}
-                  onClose={cancelEdit}
-                  onUpdate={onUpdate}
-                  />
-              </div>
+            </div>
+            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
+            <Switch 
+              style={switchStyle} 
+              checked={switchState} 
+              onChange={() => setSwitchState(!switchState)} 
+              onClick={handleSwitchClick}
+            />
+            </Tooltip>
+            )}
           </CardContent>
+
+          <CardContent style={iconButtonStyle}>
+            <Tooltip title="Eliminar">
+              <IconButton aria-label="Eliminar" onClick={handleDelete} style={{ color: 'red' }}>
+                <DeleteIcon style={{ fontSize: '30px' }} />
+              </IconButton>
+            </Tooltip>
+        </CardContent>
       </Card>
     </div>
   );

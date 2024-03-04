@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Bank.init({
     name: DataTypes.STRING,
+    enabled: DataTypes.BOOLEAN,
     roomId: DataTypes.INTEGER
   }, {
     sequelize,

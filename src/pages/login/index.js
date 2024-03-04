@@ -31,14 +31,32 @@ const LoginPage = ({}) => {
     formState: { errors },
   } = useForm();
   const [showError, setShowError] = useState(false);
-  const [providers, setProviders] = React.useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [providers, setProviders] = React.useState({});
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session) {
+        // El usuario ya está autenticado, redirigir según el rol
+        if (
+          session.user?.rol === 'usuario' ||
+          session.user?.rol === 'administrador' ||
+          session.user?.rol === 'maestro'
+        ) {
+          router.replace('/rooms');
+        } else {
+          router.replace('/');
+        }
+      }
+    };
+
+    checkSession();
+
     getProviders().then((prov) => {
       setProviders(prov);
     });
@@ -46,7 +64,7 @@ const LoginPage = ({}) => {
     if (router.query.error && router.query.error === "CredentialsSignin") {
       setShowError(true);
     }
-  }, []);
+  }, [router, signIn]);
 
   const onLoginUser = async ({ email, password }) => {
     setShowError(false);
@@ -168,21 +186,13 @@ const LoginPage = ({}) => {
   );
 };
 
-// si logra ser autenticado, regresarlo a la página que intentó acceder
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
 
-  let { p = "http://localhost:3000/home" } = query;
-  console.log("Original destination:", p);
-
-  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador') {
-    p = 'http://localhost:3000/rooms';
-  } 
-
-  if (session) {
+  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') {
     return {
       redirect: {
-        destination: p.toString(),
+        destination: '/rooms',
         permanent: false,
       },
     };

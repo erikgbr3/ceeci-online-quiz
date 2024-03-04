@@ -149,7 +149,7 @@ export default function MiniDrawer({children}) {
         </DrawerHeader>
         <Divider />
         <List>
-          {session?.user?.rol === 'usuario' ? (
+          {session?.user?.rol === 'usuario' || session?.user?.rol === 'maestro' ? (
             <ListItem key="Salas" disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import {
     Box,
+    Grid,
     Paper,
   } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
@@ -11,6 +12,7 @@ import apiClient from "../../apiClient";
 import ListCategory from "./listRooms";
 import AddRooms from "./modals/AddRooms";
 import useNavigation from "@/pages/api/routes/routes";
+import { useSession } from "next-auth/react";
 
 const CardCourse = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +21,7 @@ const CardCourse = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 6;
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const { data: session } = useSession();
 
   const navigation = useNavigation();
 
@@ -37,7 +40,15 @@ const CardCourse = () => {
 
   const loadRooms = () => {
     console.log('Se recargó');
-    apiClient.get("/api/rooms")
+    let endpoint = "/api/rooms";
+
+    if (session?.user?.rol === 'maestro') {
+      endpoint += `?userId=${session.user.id}`;
+    } else if (session?.user?.rol === 'usuario') {
+      endpoint += `?enabled=true`;
+    }
+
+    apiClient.get(endpoint)
       .then((response) => {
         console.log("Respuesta de la API:", response.data);
         setRooms(response.data || []);
@@ -75,6 +86,14 @@ const CardCourse = () => {
     const indexOfLastRoom = currentPage * roomsPerPage;
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
     const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+
+    if (currentRooms.length === 0 && session?.user?.rol === 'usuario') {
+      return (
+        <Typography variant="body1" style={{ textAlign: 'center', marginTop: '20px' }}>
+          No hay salas habilitadas por el momento.
+        </Typography>
+      );
+    }
     
     return currentRooms.map((room) => (
       <ListCategory
@@ -117,6 +136,9 @@ const CardCourse = () => {
               text: response.data.message,
               confirmButtonText: "Aceptar"
             });
+            setTimeout(() => {
+              Swal.close();
+            }, 1500);
             loadRooms();
           })
           .catch((error) => {
@@ -129,14 +151,18 @@ const CardCourse = () => {
   return (
     <Box>
       <Paper>
-        <Typography sx={{ display: "flex", justifyContent: "Center", fontSize: 25, fontWeight: 'bold' }}>
+        <Typography sx={{ display: "flex", justifyContent: "center", fontSize: 25, fontWeight: 'bold' }}>
           Salas
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
           <AddRooms recharge={loadRooms} />
+        )}
         </Box>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', padding: '20px' }}>
-          {renderRooms()}
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 6 }}>
+            {renderRooms()}
+          </Box>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Pagination

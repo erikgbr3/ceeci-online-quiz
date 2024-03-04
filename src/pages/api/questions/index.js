@@ -9,6 +9,8 @@ export default function handler(req, res) {
       return updateQuestions(req, res);
     case 'DELETE':
       return deleteQuestions(req, res);
+    case 'PATCH': 
+      return patchQuestions(req, res);
 
     default:
       res.status(400).json({ error: true, message: 'Petición errónea' });
@@ -58,37 +60,7 @@ const getQuestions = async (req, res) => {
   }
 }
 
-// const addQuestions = async (req, res) =>  {
-//     try {
-  
-//       const question = await db.Question.create({...req.body});
-  
-//       res.status(200).json({
-//         question,
-//         message: 'Registrado'
-//       });
-  
-//     } catch (error) {
-  
-//       console.log(error);
-  
-//         let errors = [];
-//         if (error.errors){
-//           errors = error.errors.map((item) => ({
-//             error: item.message,
-//             field: item.path,
-//         }));
-//       }
-//       return res.status(400).json( {
-//         error: true,
-//         message: `Ocurrió un error al procesar la petición: ${error.message}`,
-//         errors,
-//         } 
-//       )
-//     }
-//   }
-
-
+//METODO MODIFICADOS PARA WEB//
 const addQuestions = async (req, res) =>  {
   const { options } = req.body;
 
@@ -134,40 +106,6 @@ const addQuestions = async (req, res) =>  {
     });
   }
 };
-
-
-// const updateQuestions = async (req,res) => {
-
-//   try{
-//       let {id} = req.query;
-//       await db.Question.update({...req.body},
-//           {
-//           where :{ id : id }
-//       })
-//       res.json({
-//           message: 'Actualizado'
-//       })
-
-//     }
-//     catch (error) {
-
-//       console.log(error);
-
-//       let errors = [];
-//       if (error.errors){
-//           errors = error.errors.map((item) => ({
-//               error: item.message,
-//               field: item.path,
-//               }));
-//       }
-//     return res.status(400).json( {
-//       error: true,
-//       message: `Ocurrió un error al procesar la petición: ${error.message}`,
-//       errors,
-//       } 
-//     )
-//   }
-// }
 
 
 const updateQuestions = async (req, res) => {
@@ -250,91 +188,7 @@ const updateQuestions = async (req, res) => {
     });
   }
 };
-
-// const updateQuestions = async (req, res) => {
-//   const { id } = req.query;
-//   const { options } = req.body;
-
-//   try {
-//     // Find the question by ID
-//     const question = await db.Question.findByPk(id, {
-//       include: [{ model: db.Option, as: 'QuestionOption' }],
-//     });
-
-//     // Check if the question exists
-//     if (!question) {
-//       return res.status(404).json({
-//         error: true,
-//         message: 'La pregunta no fue encontrada.',
-//       });
-//     }
-
-//     // Update the question details
-//     await question.update({
-//       textQuestion: req.body.textQuestion,
-//       // You can add other fields to update here
-//     });
-
-//     // Update options associated with the question
-//     if (options && options.length > 0) {
-//       // Loop through the provided options
-//       for (const option of options) {
-//         let existingOption;
-
-//         if (option.optionId) {
-//           // If optionId exists, find the existing option
-//           existingOption = question.QuestionOption.find(
-//             (opt) => opt.id === option.optionId
-//           );
-
-//           // Update the existing option
-//           if (existingOption) {
-//             await existingOption.update({
-//               option1: option.optionText1,
-//               option2: option.optionText2,
-//               option3: option.optionText3,
-//               correctA: option.correctaText,
-//             });
-//           }
-//         } else {
-//           // If optionId doesn't exist, create a new option
-//           const newOption = await db.Option.create({
-//             option1: option.optionText1,
-//             option2: option.optionText2,
-//             option3: option.optionText3,
-//             correctA: option.correctaText,
-//             questionId: question.id,
-//           });
-
-//           // Associate the new option with the question
-//           await question.addQuestionOption(newOption);
-//         }
-//       }
-//     }
-
-//     res.status(200).json({
-//       question,
-//       message: 'Pregunta actualizada exitosamente.',
-//     });
-//   } catch (error) {
-//     console.error(error);
-
-//     let errors = [];
-//     if (error.errors) {
-//       errors = error.errors.map((item) => ({
-//         error: item.message,
-//         field: item.path,
-//       }));
-//     }
-//     return res.status(400).json({
-//       error: true,
-//       message: `Ocurrió un error al procesar la petición: ${error.message}`,
-//       errors,
-//     });
-//   }
-// };
-
-
+//FIN DE METODOS MODIFICADOS//
 
 const deleteQuestions = async (req, res) => {
   try {
@@ -362,3 +216,34 @@ const deleteQuestions = async (req, res) => {
   }
 };
 
+const patchQuestions = async (req,res) => {
+    try{
+        let {id} = req.query;
+        await db.Question.update({...req.body},
+            {
+            where :{ id : id }
+        })
+        res.json({
+            message: 'Cambiado  '
+        })
+
+      }
+      catch (error) {
+
+        console.log(error);
+
+        let errors = [];
+        if (error.errors){
+            errors = error.errors.map((item) => ({
+                error: item.message,
+                field: item.path,
+                }));
+        }
+      return res.status(400).json( {
+        error: true,
+        message: `Ocurrió un error al procesar la petición: ${error.message}`,
+        errors,
+        } 
+      )
+    }
+}

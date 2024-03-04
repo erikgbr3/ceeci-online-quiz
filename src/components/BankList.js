@@ -6,6 +6,7 @@ import apiClient from '../../apiClient';
 import { useRouter } from 'next/router';
 import BankCard from './cards/bankCard';
 import useNavigation from '@/pages/api/routes/routes';
+import { useSession } from "next-auth/react";
 
 const BankList = ({ banks }) => {
   const router = useRouter();
@@ -21,7 +22,9 @@ const BankList = ({ banks }) => {
   const banksPerPage = 6;
   const [selectedBank, setSelectedBank] = useState(null);
 
-  const [bankStates, setBankStates] = useState({});
+  const [switchStates, setSwitchStates] = useState({});
+  const { data: session } = useSession();
+  console.log('User Session:', session);
 
   const updateDataBanks = () => {
     setDataUpdate(true);
@@ -35,69 +38,54 @@ const BankList = ({ banks }) => {
   const fetchBanks = async (roomId, page) => {
     try {
       setLoading(true);
-
-      let response;
-
+  
+      let endpoint = "/api/banks";
       const offset = (page - 1) * banksPerPage;
-
+  
       if (roomId) {
-        // Fetch banks based on roomId if it is present
-        response = await apiClient.get(`/api/banks?roomId=${roomId}&offset=${offset}&limit=${banksPerPage}`);
+        endpoint += `?roomId=${roomId}&offset=${offset}&limit=${banksPerPage}`;
       } else {
-        // Fetch all banks if no roomId is present
-        response = await apiClient.get(`/api/banks?offset=${offset}&limit=${banksPerPage}`);
+        if (session?.user?.rol === 'usuario') {
+          endpoint += `?enabled=true&offset=${offset}&limit=${banksPerPage}`;
+        } else {
+          endpoint += `?offset=${offset}&limit=${banksPerPage}`;
+        }
       }
-
+  
+      const response = await apiClient.get(endpoint);
+  
       const fetchedBanks = response.data.reduce((acc, bank) => {
-        acc[bank.id] = { isEnabled: false };
+        acc[bank.id] = { isEnabled: bank.enabled };
         return acc;
       }, {});
-
+  
       // Update bankList with the fetched data
-      setBankStates(fetchedBanks);
+      setSwitchStates(fetchedBanks);
       setBankList(response.data);
     } catch (error) {
       console.error('Error fetching banks:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response;
-
-        setLoading(true);
-        response = await apiClient.get(`/api/banks?roomId=${roomId}`);
-        const fetchedBanks = response.data.reduce((acc, bank) => {
-          // Inicializando el estado del interruptor para cada banco
-          acc[bank.id] = { isEnabled: false };
-          return acc;
-        }, {});
-        setBankStates(fetchedBanks);
-        setBankList(response.data);
-      } catch (error) {
-        console.error('Error fetching banks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [roomId]);
-
-  useEffect(() => {
-    if (dataUpdate) {
-      dataBanksUpdate();
-    }
-  }, [dataUpdate, currentPage]);
+  }
 
   useEffect(() => {
     if (roomId && currentPage) {
       fetchBanks(roomId, currentPage);
     }
   }, [roomId, currentPage]);
+
+  useEffect(() => {
+    if (dataUpdate) {
+      dataBanksUpdate();
+    }
+  }, [dataUpdate, currentPage, roomId]);
+
+  useEffect(() => {
+    if (roomId) {
+      fetchBanks(roomId, currentPage);
+    }
+  }, [roomId]);
 
   const cardStyle = {
     marginBottom: '16px',
@@ -120,18 +108,42 @@ const BankList = ({ banks }) => {
     navigation.navigateToQuestionsCreation(bank.id);
   };
 
-  const toggleCardEnabled = (bankId) => {
-    setBankStates((prevStates) => ({
-      ...prevStates,
-      [bankId]: {
-        isEnabled: !prevStates[bankId]?.isEnabled,
-      },
-    }));
-  };
+  const renderBanks = () => {
+    const indexOfLastBank = currentPage * banksPerPage;
+    const indexOfFirstBank = indexOfLastBank - banksPerPage;
+    const currentBanks = bankList.slice(indexOfFirstBank, indexOfLastBank);
 
-  const indexOfLastBank = currentPage * banksPerPage;
-  const indexOfFirstBank = indexOfLastBank - banksPerPage;
-  const currentBanks = bankList.slice(indexOfFirstBank, indexOfLastBank);
+    let filteredBanks;
+
+  if (session?.user?.rol === 'usuario') {
+    // Filter only if the user role is 'usuario'
+    filteredBanks = currentBanks.filter((bank) => switchStates[bank.id]?.isEnabled === true);
+    
+    // Check if there are no banks after filtering
+    if (filteredBanks.length === 0) {
+      console.log("No hay bancos habilitados por el momento. Displaying message.");
+      return (
+        <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>
+          No hay bancos habilitadas por el momento.
+        </Typography>
+      );
+    }
+  } else {
+    // For other roles, include all banks without filtering
+    filteredBanks = currentBanks;
+  }
+
+    console.log("Filtered Banks:", filteredBanks);
+
+    return filteredBanks.map((bank) => (
+      <BankCard 
+        key={bank.id} 
+        bank={bank} 
+        switchState={switchStates[bank.id]}
+        onClick={() => handleBanksClick(bank)}
+      />
+    ));
+  };
 
   return (
     <div>
@@ -140,24 +152,18 @@ const BankList = ({ banks }) => {
           <Typography sx={{ display: 'flex', justifyContent: 'Center', fontSize: 25, fontWeight: 'bold' }}>
             Bancos
           </Typography>
-          <AddBank
-            recharge={() => {
-              setBankList(banks);
-              updateDataBanks();
-            }}
-          />
+          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            <AddBank
+              recharge={() => {
+                setBankList(banks);
+                updateDataBanks();
+              }}
+            />
+          )}
           {loading ? (
             <Typography>Cargando...</Typography>
-          ) : currentBanks.length > 0 ? (
-            currentBanks.map((bank) => (
-              <BankCard 
-                key={bank.id} 
-                bank={bank} 
-                bankStates={bankStates} 
-                toggleCardEnabled={toggleCardEnabled} 
-                onClick={() => handleBanksClick(bank)}
-              />
-            ))
+          ) : bankList.length > 0 ? (
+            renderBanks()
           ) : (
             <Typography>
               {roomId
