@@ -8,6 +8,7 @@ import apiClient from "../../apiClient";
 import AddQuestion from "./modals/AddQuestion";
 import QuestionCard from "./cards/questionCard";
 import { useRouter } from 'next/router';
+import { useSession } from "next-auth/react";
 
 
 const QuestionList = () => {
@@ -21,13 +22,16 @@ const QuestionList = () => {
   // Estado para la página actual en la paginación
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 200;
-
   const [options, setOptions] = useState([]);
 
   // Estado para manejar el estado de los interruptores de cada pregunta
   const [questionStates, setQuestionStates] = useState({});
     // Estado para actualizar la información de los bancos
   const [dataUpdate, setDataUpdate] = useState('');
+
+  const [switchStates, setSwitchStates] = useState({});
+  const { data: session } = useSession();
+  console.log('User Session:', session);
 
 
   // // Función para indicar que se deben actualizar los datos de los bancos
@@ -41,55 +45,36 @@ const QuestionList = () => {
     setDataUpdate(false);
   };
 
-
-  // const loadQuestions = () => {
-  //   console.log('Se recargó');
-  //   apiClient.get("/api/questions")
-  //     .then((response) => {
-  //       console.log("Respuesta de la API:", response.data);
-  //       setQuestions(response.data || []);
-  //       setFilteredQuestions(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-  //     apiClient.get("/api/options")
-  //     .then((response) => {
-  //       console.log("Respuesta de la API:", response.data);
-  //       setOptions(response.data || []);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
   // Función asincrónica para obtener la lista de preguntas desde el servidor
   const fetchQuestions = async (bankId, page) => {
     try {
       setLoading(true);
-
-      let response;
-
+      let endpoint = "/api/questions";
       // Calcula el índice de inicio de las preguntas a obtener
       const offset = (page - 1) * questionsPerPage;
 
       if (bankId) {
         // Obtiene las preguntas basados en bankId si está presente
-        response = await apiClient.get(`/api/questions?bankId=${bankId}&offset=${offset}&limit=${questionsPerPage}`);
+        endpoint += `?bankId+${bankId}&offset=${offset}&limit=${questionsPerPage}`;
       } else {
+        if (session?.user?.rol === 'usuario') {
+          endpoint += `?enabled=true&offset=${offset}&limit=${banksPerPage}`;
+        } else {
         // Obtiene todos las preguntas si no hay bankId presente
-        response = await apiClient.get(`/api/questions?offset=${offset}&limit=${questionsPerPage}`);
+        endpoint += `?offset=${offset}&limit=${questionsPerPage}`;
+        }
       }
+
+      const response = await apiClient.get(endpoint);
 
       // Inicializa el estado de las interruptores para cada banco
       const fetchedQuestions = response.data.reduce((acc, question) => {
-        acc[question.id] = { isEnabled: false };
+        acc[question.id] = { isEnabled: question.enabled };
         return acc;
       }, {});
 
       // Actualiza la lista de preguntas con las datos obtenidos
-      setQuestionStates(fetchedQuestions);
+      setSwitchStates(fetchedQuestions);
       setQuestions(response.data);
     } catch (error) {
       console.error('Error fetching questions:', error);
@@ -98,46 +83,34 @@ const QuestionList = () => {
     }
   };
 
-  
-
-  // useEffect(() => {
-  //   loadQuestions();
-  // }, []);
-
-
   // Efecto que se ejecuta cuando cambia bankId
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response;
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       let response;
 
-        setLoading(true);
-        // Obtiene la lista de bancos basados en bankId
-        response = await apiClient.get(`/api/questions?bankId=${bankId}`);
-        // Inicializa el estado de los interruptores para cada banco
-        const fetchedQuestions = response.data.reduce((acc, question) => {
-          acc[question.id] = { isEnabled: false };
-          return acc;
-        }, {});
-        // Actualiza la lista de bancos con los datos obtenidos
-        setQuestionStates(fetchedQuestions);
-        setQuestions(response.data);
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       // Obtiene la lista de bancos basados en bankId
+  //       response = await apiClient.get(`/api/questions?bankId=${bankId}`);
+  //       // Inicializa el estado de los interruptores para cada banco
+  //       const fetchedQuestions = response.data.reduce((acc, question) => {
+  //         acc[question.id] = { isEnabled: false };
+  //         return acc;
+  //       }, {});
+  //       // Actualiza la lista de bancos con los datos obtenidos
+  //       setQuestionStates(fetchedQuestions);
+  //       setQuestions(response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching questions:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, [bankId]);
-
-  // Efecto que se ejecuta cuando hay una actualización de datos o se cambia la página actual
-  useEffect(() => {
-    if (dataUpdate) {
-      dataQuestionsUpdate();
-    }
-  }, [dataUpdate, currentPage]);
+  //   if (bankId !== undefined) {
+  //     fetchData();
+  //   }
+  // }, [bankId]);
 
   // Efecto que se ejecuta cuando cambia bankId o currentPage
   useEffect(() => {
@@ -146,31 +119,18 @@ const QuestionList = () => {
     }
   }, [bankId, currentPage]);
 
+  // Efecto que se ejecuta cuando hay una actualización de datos o se cambia la página actual
+  useEffect(() => {
+    if (dataUpdate) {
+      dataQuestionsUpdate();
+    }
+  }, [dataUpdate, currentPage]);
 
-
-
-
-  // const updateQuestions = (question) => {
-  //   console.log(question);
-  //   const questionsCopy = [...questions];
-  //   const index = questionsCopy.findIndex(item => item.id == question.id);
-  //   console.log(index);
-  //   questionsCopy.splice(index, 1, question)
-  //   setQuestions([...questionsCopy]);
-  // }
-
-  // const updateOptions = (option) => {
-  //   console.log(option);
-  //   const optionsCopy = [...options];
-  //   const index = optionsCopy.findIndex(item => item.id == option.id);
-  //   console.log(index);
-  //   optionsCopy.splice(index, 1, option)
-  //   setOptions([...optionsCopy]);
-  // }
-
-  // const handleQuestionsClick = () => {
-  //   navigation.navigateToQuestionsCreation();
-  // };
+  useEffect(() => {
+    if (bankId) {
+      fetchQuestions(bankId, currentPage);
+    }
+  }, [bankId]);
 
   const updateItem = (items, setItems, item) => {
     console.log(item);
@@ -181,15 +141,6 @@ const QuestionList = () => {
     setItems([...itemsCopy]);
   };
   
-  // const updateQuestions = (question) => {
-  //   updateItem(questions, setQuestions, question);
-  // };
-  
-  // const updateOptions = (option) => {
-  //   updateItem(options, setOptions, option);
-  // };
-  
-
   const deleteQuestion = (id) => {
       console.log("ID a eliminar:", id); 
       Swal.fire({
@@ -223,40 +174,55 @@ const QuestionList = () => {
     };
 
   const optionId = questions.optionId
-  const questionOptions = options.find(option => option.id === optionId);
-  // const questionBank = banks.find(bank => bank.name === bankName);
-  // const questionBankName = questions.QuestionBank?.name
+  const questionOptions = options.find(option => option.id === optionId) || {};
+
+  const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+  const changePage = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
 
   const renderQuestions = () => {
     const indexOfLastQuestion = currentPage * questionsPerPage;
     const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
     const currentQuestions = questions.slice(indexOfFirstQuestion, indexOfLastQuestion);
+
+    let filteredQuestions;
+
+    if (session?.user?.rol === 'usuario') {
+      // Filter only if the user role is 'usuario'
+      filteredQuestions = currentQuestions.filter((question) => switchStates[question.id]?.isEnabled === true);
+      
+      // Check if there are no banks after filtering
+      if (filteredQuestions.length === 0) {
+        console.log("No hay bancos habilitados por el momento. Displaying message.");
+        return (
+          <Typography variant="body1" style={{ marginTop: '15px', textAlign: 'center', width: '100%' }}>
+            No hay questions habilitados por el momento.
+          </Typography>
+        );
+      }
+    } else {
+      // For other roles, include all banks without filtering
+      filteredQuestions = currentQuestions;
+    }
+
+      console.log("Filtered Banks:", filteredQuestions);
     
-    return currentQuestions.map((question, index) => (
+    return filteredQuestions.map((question, index) => (
       <Grid item key={question.id} xs={12} md={6}>
         <QuestionCard
           question={question}
           index={index}
           options={options.find(option => option.id === question.optionId)}
-          
           onDelete={deleteQuestion}
           onSaved={fetchQuestions}
-          //  onSaved={() => updateItem(questions, setQuestions, question)} // Llamar a la función de actualización
-          // onUpdate={updateItem}
           onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
           questionStates={questionStates} 
-
+          switchState={switchStates[question.id]}
         />
       </Grid>
-      
     ));
-  };
-
-  const totalPages = Math.ceil(questions.length / questionsPerPage);
-
-
-  const changePage = (event, newPage) => {
-    setCurrentPage(newPage);
   };
 
   return (
@@ -266,20 +232,16 @@ const QuestionList = () => {
           {questions[0]?.QuestionBank?.name || ''}
          </Typography>
           <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "flex-end"}}>
-            <AddQuestion 
-              // recharge={fetchQuestions}
-              recharge={() => {
-                setQuestions(questions);
-                updateDataQuestions();
-              }}
-            />
+            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+              <AddQuestion 
+                recharge={() => {
+                  setQuestions(questions);
+                  updateDataQuestions();
+                }}
+              />
+            )}
           </Grid>
-        
-          {/* <Grid container spacing={2} sx={{ display: 'flex' }} >
-            {renderQuestions()}
-          </Grid> */}
 
-          {/* Condición de carga: Si está cargando, muestra un mensaje */}
           {loading ? (
               <Typography>Cargando...</Typography>
             ) : (

@@ -81,7 +81,7 @@ const BankCard = ({ bank }) => {
             </Typography>
           </div>
           {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
-          <Tooltip title="Habilitar/Inhabilitar">
+          <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
             <Switch
               style={switchStyle}
               checked={switchState}

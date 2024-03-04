@@ -1,17 +1,24 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper, IconButton, Tooltip  } from "@mui/material";
+import { Card, CardActions, CardContent, Typography, Box, IconButton, Tooltip, Switch  } from "@mui/material";
 // import EditComponentModal from "../modals/editComponentModal";
-import WarningIcon from "@mui/icons-material/Warning";
 import apiClient from "../../../apiClient";
 import EditQuestion from "../modals/editQuestion";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 
 function QuestionCard({ question, index, options, onDelete, onUpdate }) {
   const [optionsQuestion, setOptions] = React.useState({ ...options });
   const [edit, setEdit] = React.useState(false);
+
+  const [switchState, setSwitchState] = useState(question.enabled);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    setSwitchState(question.enabled); // Actualiza el estado cuando cambia 'enabled' del banco
+  }, [question.enabled]);
 
   const handleEdit = () => {
     setEdit(true);
@@ -25,9 +32,8 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
     onDelete(question.id);
   }
 
-
   React.useEffect(() => {
-    apiClient.get('api/options')
+    apiClient.get('/api/options')
         .then(response => {
             setOptions(response.data || []);
         })
@@ -36,10 +42,34 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
         });
   }, [options]);
 
+  const handleSwitchClick = (event) => {
+    event.stopPropagation();
+
+    const newSwitchState = !switchState;
+
+    // Actualiza el estado local del switch
+    setSwitchState(newSwitchState);
+
+    // Realiza una solicitud PATCH para actualizar el valor en la base de datos
+    apiClient
+      .patch(`/api/questions?id=${question.id}`, { enabled: newSwitchState })
+      .then((response) => {
+        // Maneja la respuesta exitosa si es necesario
+        console.log("API response", response.data);
+        // Puedes omitir esta línea si estás confiado en que la API actualizó correctamente el valor
+        // setSwitchState(newSwitchState); 
+      })
+      .catch((error) => {
+        // Maneja el error si es necesario
+        console.error(error);
+      });
+  };
+
   const cardStyle = {
     // marginBottom: '16px',
     backgroundColor: '#f5f5f5',
     fontSize: 14,
+    margin: '20px'
 
   };
 
@@ -59,7 +89,16 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
     color: 'blue',
   };
 
- 
+  const switchContainerStyle = {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  };
+
+  const switchStyle = {
+    marginLeft: 'auto',
+  };
 
   const getAlphabetLetter = (index) => {
     // Obtener la letra del abecedario correspondiente al índice
@@ -70,16 +109,25 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
     <div>
        <Box>
           <Card key={question.id} style={cardStyle}>
-            <CardContent>
+          <CardContent style={switchContainerStyle}>
+            <div>
               <Typography sx={{
                 fontSize: 14,
                 fontWeight: 'bold',
               }}>
                 {index !== undefined ? ` ${index + 1}: ` : ''} {question.textQuestion}
               </Typography>
-              {/* <Typography variant="body2">{question.bankId}</Typography> */}
-              
-              {/* Renderizar las opciones */}
+            </div>
+            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+              <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
+                <Switch
+                  style={switchStyle}
+                  checked={switchState}
+                  onChange={handleSwitchClick}
+                />
+              </Tooltip>
+            )}
+          </CardContent>
               <ul>
               {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listItemStyle}>
@@ -102,31 +150,32 @@ function QuestionCard({ question, index, options, onDelete, onUpdate }) {
                   <span style={incisoStyle}> {option.correctA}</span>
                 </div>
               ))}
-
-              
             </ul>
-          </CardContent>
-          <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
-          
-          <IconButton
-            aria-label="Eliminar"
-            onClick={handleDelete}
-            style={{ color: "red" }}
-            >
-              <Tooltip title="Eliminar" arrow>
-                <DeleteIcon />
-              </Tooltip> 
-          </IconButton>
-          <IconButton
-            aria-label="Editar"
-            onClick={handleEdit}
-            style={{ color: "blue" }}
-            >
-              <Tooltip title="Editar" arrow>
-                <EditIcon />
-              </Tooltip>
-          </IconButton>
-          </CardActions>
+
+          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            <>
+              <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
+                <IconButton
+                  aria-label="Eliminar"
+                  onClick={handleDelete}
+                  style={{ color: "red" }}
+                  >
+                    <Tooltip title="Eliminar" arrow>
+                      <DeleteIcon />
+                    </Tooltip> 
+                </IconButton>
+                <IconButton
+                  aria-label="Editar"
+                  onClick={handleEdit}
+                  style={{ color: "blue" }}
+                  >
+                    <Tooltip title="Editar" arrow>
+                      <EditIcon />
+                    </Tooltip>
+                </IconButton>
+              </CardActions>
+            </>
+          )}
           <EditQuestion
             open={edit}
             question={question}

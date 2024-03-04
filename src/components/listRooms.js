@@ -109,7 +109,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
               </Typography>
             </div>
             {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
-            <Tooltip title="Habilitar/Desabilitar">
+            <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
             <Switch 
               style={switchStyle} 
               checked={switchState} 
