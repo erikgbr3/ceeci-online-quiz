@@ -123,8 +123,8 @@ const BankList = ({ banks }) => {
     if (filteredBanks.length === 0) {
       console.log("No hay bancos habilitados por el momento. Displaying message.");
       return (
-        <Typography variant="body1" style={{ textAlign: 'center', marginTop: '20px' }}>
-          No hay salas habilitadas por el momento.
+        <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>
+          No hay bancos habilitadas por el momento.
         </Typography>
       );
     }
