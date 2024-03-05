@@ -59,6 +59,60 @@ const getAnswers = async (req, res) => {
     }
 }
 
+
+// const getAnswers = async (req, res) => {
+
+//     const userId = req.query.userId;
+//     const questionId = req.query.questionId;
+
+//     // Verifica si al menos uno de los parámetros está presente
+//     if (!userId && !questionId) {
+//         return res.status(400).json({
+//         message: 'Se requiere al menos uno de los parámetros userId o questionId.',
+//         });
+//     }
+
+//     try{
+//         //los datos vienen del req.body
+//         console.log(req.body);
+
+//         const whereClause = {};
+
+//         // Añade userId a la cláusula WHERE si está presente
+//         if (userId) {
+//         whereClause.userId = userId;
+//         }
+
+//         // Añade questionId a la cláusula WHERE si está presente
+//         if (questionId) {
+//         whereClause.questionId = questionId;
+//         }
+
+//         const answer = await db.Answer.findAll({
+//             attributes: ['selection','userId', 'questionId', 'optionId'],
+//             where: whereClause,
+//         });
+//         return res.json(answer)
+    
+//     }catch(error){
+//         console.log(error);
+//         let errors = []
+
+//         if(error.errors){
+//             //extrae la info
+//             errors = error.errors.map((item) => ({
+//                 error: item.message, 
+//                 field: item.path,
+//             }));
+//         }
+
+//         return res.status(400).json({
+//             message: `Ocurrió un error al procesar la petición: ${error.message}`,
+//             errors,
+//         })
+//     }
+// }
+
 const addAnswers = async (req, res) =>  {
     try {
 

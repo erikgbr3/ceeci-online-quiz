@@ -91,13 +91,13 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
 
   const listStyle = {
     listStyleType: 'none',
-    marginLeft: '12px',
+    marginLeft: '16px',
     marginTop: '8px',
     // padding: '2px'
   };
 
   const listItemStyle = {
-    marginLeft: '12px',
+    marginLeft: '16px',
   };
 
   const incisoStyle = {
@@ -143,7 +143,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                 />
               </Tooltip>
             )}
-          </CardContent>
+            </CardContent>
               <ul>
               {question.QuestionOption && question.QuestionOption.map((option, index) => (
                 <div key={option.id} style={listItemStyle}>
@@ -173,37 +173,6 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                 <span style={incisoStyle}>Esta pregunta ya ha sido respondida</span>
               </div>
             )}
-          </CardContent>
-          <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
-          
-          <IconButton
-            aria-label="Eliminar"
-            onClick={handleDelete}
-            style={{ color: "red" }}
-            >
-              <Tooltip title="Eliminar" arrow>
-                <DeleteIcon />
-              </Tooltip> 
-          </IconButton>
-          <IconButton
-            aria-label="Editar"
-            onClick={handleEdit}
-            style={{ color: "blue" }}
-            >
-              <Tooltip title="Editar" arrow>
-                <EditIcon />
-              </Tooltip>
-          </IconButton>
-          <IconButton
-            aria-label="Respondida por:"
-            onClick={handleViewUsers}
-            style={{ color: "blue" }}
-            >
-              <Tooltip title="Respondida por:" arrow>
-                <RemoveRedEyeIcon />
-              </Tooltip>
-          </IconButton>
-          </CardActions>
 
           {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
             <>
@@ -224,6 +193,15 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                   >
                     <Tooltip title="Editar" arrow>
                       <EditIcon />
+                    </Tooltip>
+                </IconButton>
+                <IconButton
+                  aria-label="Respondida por:"
+                  onClick={handleViewUsers}
+                  style={{ color: "blue" }}
+                  >
+                    <Tooltip title="Respondida por:" arrow>
+                      <RemoveRedEyeIcon />
                     </Tooltip>
                 </IconButton>
               </CardActions>
