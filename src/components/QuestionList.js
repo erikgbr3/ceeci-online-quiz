@@ -9,6 +9,7 @@ import AddQuestion from "./modals/AddQuestion";
 import QuestionCard from "./cards/questionCard";
 import { useRouter } from 'next/router';
 import { useSession } from "next-auth/react";
+import QuestionCardStudent from "./cards/questionCardStudent";
 
 
 const QuestionList = () => {
@@ -237,7 +238,7 @@ const QuestionList = () => {
     
     return filteredQuestions.map((question, index) => (
       <Grid item key={question.id} xs={12} md={6}>
-        <QuestionCard
+        <QuestionCardStudent
           question={question}
           index={index}
           options={options.find(option => option.id === question.optionId)}

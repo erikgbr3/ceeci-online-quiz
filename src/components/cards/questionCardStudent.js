@@ -46,31 +46,31 @@ function QuestionCardStudent({ question, index, options }) {
   getUserId();
 }, []);
   
-  useEffect(() => {
-    // Obtener las respuestas de la base de datos al cargar la página
-    const fetchAnswers = async () => {
-      try {
-        const response = await apiClient.get(`/api/answers?questionId=${question.id}`);
-        const answeredQuestionIds = response.data.map(answer => answer.questionId);
-        setAnsweredQuestions(answeredQuestionIds);
-      } catch (error) {
-        console.error('Error al obtener respuestas de la base de datos:', error);
-      }
-    };
+  // useEffect(() => {
+  //   // Obtener las respuestas de la base de datos al cargar la página
+  //   const fetch = async () => {
+  //     try {
+  //       const response = await apiClient.get(`/api/answer?questionId=${question.id}`);
+  //       const answeredQuestionIds = response.data.map(answer => answer.questionId);
+  //       setAnsweredQuestions(answeredQuestionIds);
+  //     } catch (error) {
+  //       console.error('Error al obtener respuestas de la base de datos:', error);
+  //     }
+  //   };
 
-    fetchAnswers();
+  //   fetch();
 
-    // Obtener las opciones de la API
-    apiClient.get('api/options')
-      .then(response => {
-        setOptions(response.data || []);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  //   // Obtener las opciones de la API
+  //   apiClient.get('api/options')
+  //     .then(response => {
+  //       setOptions(response.data || []);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
 
-      setAnsweredQuestions([]);
-  }, [question.id, userId]);
+  //     setAnsweredQuestions([]);
+  // }, [question.id, userId]);
 
   // useEffect(() => {
   //   // Obtener las preguntas contestadas del almacenamiento local al cargar la página
