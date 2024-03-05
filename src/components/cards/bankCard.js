@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Switch, Typography, Tooltip } from '@mui/material';
+import { Card, CardContent, Switch, Typography, Tooltip, CardActions, Button } from '@mui/material';
 import useNavigation from '@/pages/api/routes/routes';
 import apiClient from '../../../apiClient';
 import { useSession } from 'next-auth/react';
@@ -68,7 +68,7 @@ const BankCard = ({ bank }) => {
 
   return (
     
-      <Card key={bank.id} style={{ marginBottom: '16px', backgroundColor: '#f5f5f5', marginLeft: '90px', marginRight: '90px' }}>
+      <Card key={bank.id} style={{ backgroundColor: '#f5f5f5'}}>
         <CardContent style={switchContainerStyle}>
           <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
             <Typography 
@@ -90,6 +90,14 @@ const BankCard = ({ bank }) => {
           </Tooltip>
           )}
         </CardContent>
+        <CardActions sx={{ display: "flex", justifyContent: "center", marginTop: '10px'}}>
+          <Button 
+                variant="contained"
+              >
+                Ver calificaciones
+              </Button>
+        </CardActions>
+              
       </Card>
     
   );

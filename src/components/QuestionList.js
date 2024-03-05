@@ -238,7 +238,7 @@ const QuestionList = () => {
     
     return filteredQuestions.map((question, index) => (
       <Grid item key={question.id} xs={12} md={6}>
-        <QuestionCardStudent
+        <QuestionCard
           question={question}
           index={index}
           options={options.find(option => option.id === question.optionId)}
