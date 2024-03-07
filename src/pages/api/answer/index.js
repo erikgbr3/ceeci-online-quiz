@@ -19,14 +19,13 @@ export default function handler(req, res) {
 const getAnswers = async (req, res) => {
 
     const userId = req.query.userId;
+    let whereCondition = {};
 
-    // Verifica si el userId está presente
-    if (!userId) {
-      return res.status(400).json({
-        message: 'Se requiere el parámetro userId para obtener respuestas específicas del usuario.',
-      });
-    }
-
+        if (userId) {
+            whereCondition = {
+                userId: userId,
+            };
+        }
 
     try{
         //los datos vienen del req.body
@@ -34,9 +33,7 @@ const getAnswers = async (req, res) => {
 
         const answer = await db.Answer.findAll({
             attributes: ['selection','userId', 'questionId', 'optionId'],
-            where: {
-                userId: userId,
-            },
+            where: whereCondition,
         });
         return res.json(answer)
     

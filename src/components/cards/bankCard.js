@@ -4,6 +4,7 @@ import { Card, CardContent, Switch, Typography, Tooltip, CardActions, Button } f
 import useNavigation from '@/pages/api/routes/routes';
 import apiClient from '../../../apiClient';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const BankCard = ({ bank }) => {
 
@@ -18,6 +19,7 @@ const BankCard = ({ bank }) => {
   };
 
   const { navigateToQuestionsCreation } = useNavigation();
+  const { navigateToQuestionsResults } = useNavigation();
 
   const [switchState, setSwitchState] = useState(bank.enabled);
   const { data: session } = useSession();
@@ -30,6 +32,11 @@ const BankCard = ({ bank }) => {
   const handleCardClick = () => {
     console.log("handleCardClick executed");
     navigateToQuestionsCreation(bank.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
+  }
+
+  const handleButtomClick = () => {
+    console.log("handleButtomClick executed");
+    navigateToQuestionsResults(bank.id);  // Llama a la función onClick cuando se hace clic en la tarjeta
   }
 
   const handleSwitchClick = (event) => {
@@ -53,6 +60,20 @@ const BankCard = ({ bank }) => {
         // Maneja el error si es necesario
         console.error(error);
       });
+  };
+
+  const formatDateTime = (dateTimeString) => {
+    const options = { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    };
+
+    const dateTime = new Date(dateTimeString);
+    return new Intl.DateTimeFormat('es-ES', options).format(dateTime);
   };
 
   const switchContainerStyle = {
@@ -79,6 +100,14 @@ const BankCard = ({ bank }) => {
             >
               {bank.name}
             </Typography>
+            <Typography 
+              sx={{ 
+                fontSize: 16, 
+                color: 'gray' 
+              }}
+            >
+              {formatDateTime(bank.createdAt)}
+            </Typography>
           </div>
           {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
           <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
@@ -91,11 +120,14 @@ const BankCard = ({ bank }) => {
           )}
         </CardContent>
         <CardActions sx={{ display: "flex", justifyContent: "center", marginTop: '10px'}}>
-          <Button 
-                variant="contained"
-              >
-                Ver calificaciones
-              </Button>
+          {/* <Link href="/results"> */}
+            <Button 
+              onClick={handleButtomClick}
+              variant="outlined"
+            >
+              Ver calificaciones
+            </Button>
+          {/* </Link> */}
         </CardActions>
               
       </Card>
