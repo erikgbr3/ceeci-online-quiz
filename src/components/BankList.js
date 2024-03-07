@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import AddBank from './modals/AddBank';
 import apiClient from '../../apiClient';
@@ -136,19 +136,21 @@ const BankList = ({ banks }) => {
     console.log("Filtered Banks:", filteredBanks);
 
     return filteredBanks.map((bank) => (
-      <BankCard 
-        key={bank.id} 
-        bank={bank} 
-        switchState={switchStates[bank.id]}
-        onClick={() => handleBanksClick(bank)}
-      />
+      <Grid item key={bank.id} xs={12} md={6}>
+          <BankCard
+            bank={bank} 
+            switchState={switchStates[bank.id]}
+            onClick={() => handleBanksClick(bank)}
+          />
+      </Grid>
+      
     ));
   };
 
   return (
     <div>
       <Box>
-        <Paper style={{ padding: '16px' }}>
+        <Paper>
           <Typography sx={{ display: 'flex', justifyContent: 'Center', fontSize: 25, fontWeight: 'bold' }}>
             Bancos
           </Typography>
@@ -160,7 +162,7 @@ const BankList = ({ banks }) => {
               }}
             />
           )}
-          {loading ? (
+          {/* {loading ? (
             <Typography>Cargando...</Typography>
           ) : bankList.length > 0 ? (
             renderBanks()
@@ -171,8 +173,25 @@ const BankList = ({ banks }) => {
                 : 'Selecciona una sala para ver los bancos asociados.'
               }
             </Typography>
-          )}
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          )} */}
+          {loading ? (
+              <Typography>Cargando...</Typography>
+            ) : (
+              <React.Fragment>
+                <Grid container spacing={2} sx={{ display: 'flex' }}>
+                  {renderBanks()}
+                </Grid>
+                {bankList.length === 0 && (
+                  <Typography>
+                    {roomId
+                       ? 'No hay bancos asociados a esta sala.'
+                       : 'Selecciona una sala para ver los bancos asociados.'
+                     }
+                  </Typography>
+                )}
+              </React.Fragment>
+            )}
+          <Box sx={{ display: 'flex', justifyContent: 'center', padding: '12px' }}>
             <Pagination count={totalPages} page={currentPage} onChange={changePage} />
           </Box>
         </Paper>

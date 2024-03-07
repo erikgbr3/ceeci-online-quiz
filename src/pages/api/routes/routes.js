@@ -36,6 +36,12 @@ const useNavigation = () => {
     router.push(destination);
   };
 
+  const navigateToQuestionsResults = (bankId) => {
+    console.log('Navigating to question result with:', bankId);
+    const destination = `/results/${bankId ? `?bankId=${bankId}` : ''}`;
+    router.push(destination);
+  };
+
   return {
     handleUsersClick,
     handleCoursesClick,
@@ -44,6 +50,8 @@ const useNavigation = () => {
     
     navigateToBankCreation,
     navigateToQuestionsCreation,
+    navigateToQuestionsResults,
+
   };
 };
 

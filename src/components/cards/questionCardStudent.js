@@ -15,7 +15,7 @@ import { getSession } from 'next-auth/react';
 function QuestionCardStudent({ question, index, options }) {
   const [optionsQuestion, setOptions] = React.useState({ ...options });
 
-  const [selectedAnswer, setSelectedAnswer] = useState({});
+  const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
 
   const [userId, setUserId] = useState(null);
@@ -79,28 +79,58 @@ function QuestionCardStudent({ question, index, options }) {
   //   setAnsweredQuestions(answeredQuestionIds);
   // }, []);
 
+
+
+  // const handleAnswerChange = (event) => {
+  //   // setSelectedAnswer(event.target.value);
+  //   setSelectedAnswer({ ...selectedAnswer, [event.target.name]: event.target.value.id });
+  // }
+
+  // const handleAnswerChange = (event) => {
+  //   setSelectedAnswer({
+  //     ...selectedAnswer,
+  //     [event.target.name]: {
+  //       id: event.target.value.id,
+  //       value: event.target.value, // Ajusta esto según la estructura de tu opción
+  //     },
+  //   });
+  // }
+
   const handleAnswerChange = (event) => {
-    // setSelectedAnswer(event.target.value);
-    setSelectedAnswer({ ...selectedAnswer, [event.target.name]: event.target.value });
+    const selectedAnswer = question.QuestionOption.find(option => 
+      option.option1 === event.target.value
+      || option.option2 === event.target.value
+      || option.option3 === event.target.value);
+  
+    if (selectedAnswer) {
+      setSelectedAnswer({
+        ...selectedAnswer,
+        [question.id]: {
+          id: selectedAnswer.id,
+          value: event.target.value,
+        },
+      });
+    }
   }
 
   const isQuestionAnswered = answeredQuestions.includes(question.id);
 
 
   const handleSubmit = async (questionId) => {
-    const selectedOptionValue = selectedAnswer[questionId];
-    console.log(`Pregunta ${questionId}: Respuesta seleccionada: ${selectedOptionValue}`);
+    const selectedAnswers = selectedAnswer[questionId];
+    console.log(`Pregunta ${questionId}: Respuesta seleccionada: ${selectedAnswers}`);
   
-    if (selectedOptionValue) {
+    if (selectedAnswers) {
       // Obtener la letra correspondiente al índice seleccionado
-      const alphabetLetter = String.fromCharCode(65 + parseInt(selectedOptionValue.split('_')[1]));
+      // const alphabetLetter = String.fromCharCode(65 + parseInt(selectedOptionValue.split('_')[1]));
 
       const answerData = {
-        selection: alphabetLetter,
+        selection: selectedAnswers.value,
         userId: userId,
         questionId: questionId,
-        optionId: selectedOptionValue,
+        optionId: selectedAnswers.id,
       };
+      console.log('Datos de respuesta antes de enviar:', answerData); // Agrega este console.log
   
       try {
         const response = await apiClient.post('/api/answer', answerData);
@@ -183,13 +213,14 @@ function QuestionCardStudent({ question, index, options }) {
               </Typography>
               
               {/* Renderizar las opciones */}
-              <RadioGroup value={selectedAnswer[question.id]} onChange={handleAnswerChange}>
+              <RadioGroup value={selectedAnswer[question.id]?.value || ''} onChange={handleAnswerChange}>
                 {question.QuestionOption && question.QuestionOption.map((option, index) => (
                   <FormControlLabel
                     key={option.id}
-                    value={`${option.id}_${index}`}
+                    // value={`${option.id}_${index}`}
+                    value={option.option1}
                     control={<Radio size="small"/>}
-                    name={question.id} 
+                    name={String(question.id)}
                     label={
                       <div style={listItemStyle}>
                         <span style={incisoStyle}>{`${getAlphabetLetter(index)}.`}</span>{' '}
@@ -202,7 +233,8 @@ function QuestionCardStudent({ question, index, options }) {
                 {question.QuestionOption && question.QuestionOption.map((option, index) => (
                   <FormControlLabel
                     key={option.id}
-                    value={`${option.id}_${index + 1}`}
+                    // value={`${option.id}_${index + 1}`}
+                    value={option.option2}
                     control={<Radio size="small"/>}
                     name={question.id} 
                     label={
@@ -217,7 +249,8 @@ function QuestionCardStudent({ question, index, options }) {
                 {question.QuestionOption && question.QuestionOption.map((option, index) => (
                    <FormControlLabel
                     key={option.id}
-                    value={`${option.id}_${index + 2}`}
+                    // value={`${option.id}_${index + 2}`}
+                    value={option.option3}
                     control={<Radio size="small"/>}
                     name={question.id} 
                     label={

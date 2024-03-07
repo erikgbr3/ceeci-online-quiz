@@ -58,7 +58,7 @@ const QuestionList = () => {
 
       if (bankId) {
         // Obtiene las preguntas basados en bankId si está presente
-        endpoint += `?bankId+${bankId}&offset=${offset}&limit=${questionsPerPage}`;
+        endpoint += `?bankId=${bankId}&offset=${offset}&limit=${questionsPerPage}`;
       } else {
         if (session?.user?.rol === 'usuario') {
           endpoint += `?enabled=true&offset=${offset}&limit=${banksPerPage}`;
@@ -238,7 +238,7 @@ const QuestionList = () => {
     
     return filteredQuestions.map((question, index) => (
       <Grid item key={question.id} xs={12} md={6}>
-        <QuestionCardStudent
+        <QuestionCard
           question={question}
           index={index}
           options={options.find(option => option.id === question.optionId)}

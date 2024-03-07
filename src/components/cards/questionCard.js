@@ -85,7 +85,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
     // marginBottom: '16px',
     backgroundColor: '#f5f5f5',
     fontSize: 14,
-    margin: '20px'
+    // margin: '20px'
 
   };
 
