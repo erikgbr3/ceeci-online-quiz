@@ -15,6 +15,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
   //const [roomss, setRoomss] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [switchState, setSwitchState] = useState(room.enabled);
+  const [isHovered, setIsHovered] = useState(false);
   const { data: session } = useSession();
 
   const { navigateToBankCreation } = useNavigation();
@@ -76,6 +77,14 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
   }, []);
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  }
+
   const switchContainerStyle = {
     position: 'relative',
     display: 'flex',
@@ -85,6 +94,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
   const switchStyle = {
     marginLeft: 'auto',
+    color: '#519581FF',
   };
 
   const iconButtonStyle = {
@@ -93,14 +103,21 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
 
 
   return (
-    <div onClick={handleCardClick} style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div 
+      onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ display: 'flex', flexWrap: 'wrap' }}
+    >
       <Card variant="outlined" style={{
-        width: '310px',
-        height: '150px',
+        width: isHovered ? '350px' : '310px',
+        height: isHovered ? '170px' : '150px',
         margin: '10px',
         borderRadius: '15px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        cursor: 'pointer', 
+        cursor: 'pointer',
+        backgroundColor: '#5195810F',
+        transition: 'width 0.3s, height 0.3s',
       }}>
           <CardContent style={switchContainerStyle}>
             <div>

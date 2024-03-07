@@ -14,7 +14,7 @@ import {
   Select, 
   MenuItem 
 } from '@mui/material';
-import PeopleIcon from '@mui/icons-material/People';
+import ClassIcon from '@mui/icons-material/Class';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useModal from '../../../hooks/useModal';
@@ -93,6 +93,8 @@ export default function AddRooms ({ recharge }) {
         icon: "success",
         text: response.data.message,
         confirmButtonText: "Aceptar",
+        confirmButtonColor: '#519581FF',
+
       });
       setTimeout(() => {
         Swal.close();
@@ -115,12 +117,11 @@ export default function AddRooms ({ recharge }) {
       <Box xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={openModal}
-          sx={{ margin: "10px", backgroundColor: "#223354"}}
+          sx={{ margin: "10px", backgroundColor: "#0B7564"}}
           variant="contained"
-          color="primary"
-          startIcon={<PeopleIcon />}
+          startIcon={<ClassIcon />}
         >
-          Agregar 
+          Agregar sala
         </Button>
       </Box>
       <Dialog
@@ -137,7 +138,8 @@ export default function AddRooms ({ recharge }) {
           display: "flex",
           justifyContent: "center",
           fontSize: 25,
-          fontWeight: "bold"
+          fontWeight: "bold",
+          color: "#0B7564"
         }}
       >
         <span>Agregar Sala</span>
@@ -205,10 +207,10 @@ export default function AddRooms ({ recharge }) {
             marginBottom: "5px",
           }}
         >
-          <Button onClick={closeModal} variant="contained" color="error" startIcon={<CancelIcon />}>
+          <Button onClick={closeModal} variant="outlined" color="error" sx={{ color: "#0B7564"}} startIcon={<CancelIcon />}>
             Cancelar
           </Button>
-          <Button type="submit" variant="contained" color="success" startIcon={<AddCircleIcon />}>
+          <Button type="submit" variant="contained" color="success" sx={{ backgroundColor: "#0B7564"}} startIcon={<AddCircleIcon />}>
             Agregar
           </Button>
         </DialogActions>

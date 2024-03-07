@@ -66,6 +66,7 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
         icon: 'success',
         text: response.data.message,
         confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#519581FF',
       });
 
       resetForm();
@@ -105,8 +106,16 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
       method="put"
       TransitionComponent={Transition}
     >
-      <DialogTitle>
-        Editar Pregunta
+      <DialogTitle sx={{
+          display: "flex",
+          justifyContent: "center",
+          fontSize: 25,
+          fontWeight: "bold",
+          color: "#0B7564"
+
+        }}
+      >
+        <span>Editar pregunta</span>
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={0}>
@@ -165,11 +174,20 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
+      <DialogActions
+          sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginRight: "80px",
+          marginLeft: "80px",
+          marginBottom: "5px",
+        }}
+      >
         <Button
           onClick={onClose}
-          variant="contained"
-          color="error"
+          variant="outlined"
+          color="error" 
+          sx={{ color: "#0B7564"}}
         >
           Cancelar
         </Button>
@@ -177,8 +195,9 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
           type="submit"
           variant="contained"
           color="success"
+          sx={{ backgroundColor: "#0B7564"}}
         >
-          Guardar Cambios
+          Guardar
         </Button>
       </DialogActions>
     </Dialog>
