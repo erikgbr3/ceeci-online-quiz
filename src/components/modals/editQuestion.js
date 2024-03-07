@@ -49,7 +49,8 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
     }));
   };
 
-  const onSubmitQuestion = async () => {
+  const onSubmitQuestion = async (event) => {
+    event.preventDefault();
     try {
       const response = await apiClient.put(`/api/questions?id=${question.id}`, {
         textQuestion: questionData.textQuestion,
@@ -70,7 +71,10 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
 
       resetForm();
       onClose();
-      onUpdate(response.data.question);
+      onUpdate({
+        ...response.data.question,
+        QuestionOption: questionData.QuestionOption
+      });
     } catch (error) {
     console.log("Error al actualizar usuario:", error);
       Swal.fire({
@@ -100,11 +104,9 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
       open={open}
       onClose={onClose}
       aria-describedby="alert-dialog-slide-description"
-      component={'form'}
-      onSubmit={onSubmitQuestion}
-      method="put"
       TransitionComponent={Transition}
     >
+       <form onSubmit={onSubmitQuestion}>
       <DialogTitle>
         Editar Pregunta
       </DialogTitle>
@@ -181,9 +183,7 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
           Guardar Cambios
         </Button>
       </DialogActions>
+      </form>
     </Dialog>
   );
 }
-
-
-
