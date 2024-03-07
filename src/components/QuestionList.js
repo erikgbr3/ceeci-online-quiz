@@ -191,7 +191,8 @@ const QuestionList = () => {
                 text: response.data.message,
                 confirmButtonText: "Aceptar"
               });
-              fetchQuestions();
+              const updatedQuestions = questions.filter(question => question.id !== id);
+              setQuestions(updatedQuestions);
             })
             .catch((error) => {
               console.log("Error al eliminar question:", error);
