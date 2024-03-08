@@ -98,7 +98,7 @@ const CardCourse = () => {
     return currentRooms.map((room) => (
       <ListCategory
         room={room}
-        onDelete={deleteRoom}
+        onDelete={() => deleteRoom(room.id)}
         onSaved={loadRooms}
         onUpdate={updateRooms}
         key={room.id}
