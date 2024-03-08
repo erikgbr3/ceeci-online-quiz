@@ -194,7 +194,8 @@ const QuestionList = () => {
                 confirmButtonColor: '#519581FF',
 
               });
-              fetchQuestions();
+              const updatedQuestions = questions.filter(question => question.id !== id);
+              setQuestions(updatedQuestions);
             })
             .catch((error) => {
               console.log("Error al eliminar question:", error);
