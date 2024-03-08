@@ -77,10 +77,10 @@ const UserTable = () => {
       text: "Los datos relacionados con el usuario se perderán permanentemente",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
       confirmButtonText: "Si, eliminar",
+      cancelButtonColor: "#519581FF",
+      cancelButtonText: "Cancelar",
       
     }).then((result) => {
       if (result.isConfirmed) {
@@ -92,7 +92,8 @@ const UserTable = () => {
               position: "center",
               icon: "success",
               text: response.data.message,
-              confirmButtonText: "Aceptar"
+              confirmButtonText: "Aceptar",
+              confirmButtonColor: '#519581FF',
             });
             loadUsers();
           })
@@ -136,7 +137,7 @@ const UserTable = () => {
           <AddUser recharge={loadUsers}/>
         </Box>
 
-        <Box sx={{ marginRight: "10px", marginLeft: "10px" }}>
+        <Box sx={{ display: "flex", marginBottom: "16px"}}>
         <TextField
           placeholder="Buscar usuario"
           variant="outlined"
@@ -154,7 +155,7 @@ const UserTable = () => {
         </Box>
         <TableContainer component={Paper}>
           <Table aria-label="User Table">
-            <TableHead>
+            <TableHead sx={{ background: '#4AAAA216'}}>
               <TableRow>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>NOMBRE</TableCell>
                 <TableCell sx={{ color: '#223354', fontWeight: "800" }}>EMAIL</TableCell>

@@ -32,7 +32,7 @@ const ResultList = ({ bankId }) => {
   const [questions, setQuestions] = useState([]);
   // const [report, setReport] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 1000;
+  const usersPerPage = 7;
 
   
 

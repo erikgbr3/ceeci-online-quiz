@@ -41,7 +41,8 @@ export default function AddUser({ recharge }) {
           position: "center",
           icon: "success",
           text: response.data.message,
-          confirmButtonText: "Aceptar"
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: '#519581FF',
         });
         closeModal();
         recharge();
@@ -67,7 +68,7 @@ export default function AddUser({ recharge }) {
       <Box xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={openModal}
-          sx={{ margin: "10px", backgroundColor: "#223354"}}
+          sx={{ margin: '10px', backgroundColor: '#0B7564' }}
           variant="contained"
           color="primary"
           startIcon={<PeopleIcon />}
@@ -91,6 +92,7 @@ export default function AddUser({ recharge }) {
             justifyContent: "center",
             fontSize: 25,
             fontWeight: "bold",
+            color: "#0B7564"
           }}
         >
           Agregar Usuario
@@ -186,10 +188,22 @@ export default function AddUser({ recharge }) {
             marginBottom: "5px",
           }}
         >
-          <Button onClick={closeModal} variant="contained" color="error" startIcon={<CancelIcon />}>
+          <Button 
+            onClick={closeModal} 
+            variant="outlined"
+            color="error" 
+            sx={{ color: "#0B7564"}} 
+            startIcon={<CancelIcon />}
+            >
             Cancelar
           </Button>
-          <Button type="submit" variant="contained" color="success" startIcon={<AddCircleIcon />}>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="success" 
+            sx={{ backgroundColor: "#0B7564"}}
+            startIcon={<AddCircleIcon />}
+            >
             Agregar
           </Button>
         </DialogActions>
