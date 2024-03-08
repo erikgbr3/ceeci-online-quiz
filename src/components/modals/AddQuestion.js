@@ -59,10 +59,11 @@ export default function AddQuestion({ recharge }) {
           icon: 'success',
           text: response.data.message,
           confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#519581FF',
         });
         setTimeout(() => {
           Swal.close();
-        }, 1500);
+        }, 2000);
       } else {
         // Si al menos una opción tiene valor, registra la pregunta y las opciones
         const response = await apiClient.post('/api/questions', {
@@ -86,10 +87,11 @@ export default function AddQuestion({ recharge }) {
           icon: 'success',
           text: response.data.message,
           confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#519581FF',
         });
         setTimeout(() => {
           Swal.close();
-        }, 1500);
+        }, 2000);
       }
     } catch (error) {
       console.error(error);
@@ -121,7 +123,7 @@ export default function AddQuestion({ recharge }) {
       <Box xs={6} md={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button
           onClick={openModal}
-          sx={{ margin: '10px', backgroundColor: '#223354' }}
+          sx={{ margin: '10px', backgroundColor: '#0B7564' }}
           variant="contained"
           color="primary"
           startIcon={<AddCircleIcon />}
@@ -144,6 +146,7 @@ export default function AddQuestion({ recharge }) {
             justifyContent: 'center',
             fontSize: 25,
             fontWeight: 'bold',
+            color: "#0B7564"
           }}
         >
           <span>Agregar Pregunta</span>
@@ -233,8 +236,9 @@ export default function AddQuestion({ recharge }) {
         >
           <Button
             onClick={closeModal}
-            variant="contained"
-            color="error"
+            variant="outlined"
+            color="error" 
+            sx={{ color: "#0B7564"}}
             startIcon={<CancelIcon />}
           >
             Cancelar
@@ -243,6 +247,7 @@ export default function AddQuestion({ recharge }) {
             type="submit"
             variant="contained"
             color="success"
+            sx={{ backgroundColor: "#0B7564"}}
             startIcon={<AddCircleIcon />}
           >
             Agregar

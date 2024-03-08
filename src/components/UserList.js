@@ -59,7 +59,7 @@ function UserList({ user, onDelete, onUpdate }) {
         <IconButton
           aria-label="Editar"
           onClick={handleEdit}
-          style={{ color: "blue" }}
+          style={{ color: "#0B7564" }}
         >
           <EditIcon />
         </IconButton>

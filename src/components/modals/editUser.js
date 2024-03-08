@@ -37,6 +37,8 @@ function EditUser({ isOpen, closeModal, onUpdate, user }) {
           icon: "success",
           text: response.data.message,
           confirmButtonText: "Aceptar",
+          confirmButtonColor: '#519581FF',
+
         })
         console.log(data);
         closeModal();
@@ -67,6 +69,7 @@ function EditUser({ isOpen, closeModal, onUpdate, user }) {
           justifyContent: "center",
           fontSize: 25,
           fontWeight: "bold",
+          color: "#0B7564",
         }}
       >
         Editar Usuario
@@ -158,11 +161,22 @@ function EditUser({ isOpen, closeModal, onUpdate, user }) {
           marginBottom: "5px",
         }}
       >
-
-        <Button onClick={closeModal} variant="contained" color="error" startIcon={<CancelIcon />}>
+        <Button 
+          onClick={closeModal} 
+          variant="outlined"
+          color="error" 
+          sx={{ color: "#0B7564"}} 
+          startIcon={<CancelIcon />}
+          >
             Cancelar
           </Button>
-          <Button type="submit" variant="contained" color="success" startIcon={<SaveIcon />}>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="success" 
+            sx={{ backgroundColor: "#0B7564"}}
+            startIcon={<SaveIcon />}
+            >
             Guardar
           </Button>
       </DialogActions>

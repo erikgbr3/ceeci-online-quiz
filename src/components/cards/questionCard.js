@@ -82,7 +82,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
 
   const cardStyle = {
     // marginBottom: '16px',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#4AAAA216',
     fontSize: 14,
     // margin: '20px'
 
@@ -101,7 +101,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
 
   const incisoStyle = {
     fontWeight: 'bold',
-    color: 'blue',
+    color: "#0B7564",
   };
 
   const switchContainerStyle = {
@@ -113,6 +113,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
 
   const switchStyle = {
     marginLeft: 'auto',
+    color: '#519581FF',
   };
 
   const getAlphabetLetter = (index) => {
@@ -188,7 +189,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                 <IconButton
                   aria-label="Editar"
                   onClick={handleEdit}
-                  style={{ color: "blue" }}
+                  style={{ color: "#0B7564" }}
                   >
                     <Tooltip title="Editar" arrow>
                       <EditIcon />
@@ -197,7 +198,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                 <IconButton
                   aria-label="Respondida por:"
                   onClick={handleViewUsers}
-                  style={{ color: "blue" }}
+                  style={{ color: "#0B7564" }}
                   >
                     <Tooltip title="Respondida por:" arrow>
                       <RemoveRedEyeIcon />

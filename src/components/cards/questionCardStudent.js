@@ -120,7 +120,7 @@ function QuestionCardStudent({ question, index, options }) {
  
   const cardStyle = {
     // marginBottom: '16px',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#4AAAA216',
     fontSize: 14,
 
   };
@@ -138,7 +138,7 @@ function QuestionCardStudent({ question, index, options }) {
 
   const incisoStyle = {
     fontWeight: 'bold',
-    color: 'blue',
+    color: '#0B7564',
   };
 
  
@@ -161,7 +161,7 @@ function QuestionCardStudent({ question, index, options }) {
               </Typography>
               
               {/* Renderizar las opciones */}
-              <RadioGroup value={selectedAnswer[question.id]?.value || ''} onChange={handleAnswerChange}>
+              <RadioGroup  value={selectedAnswer[question.id]?.value || ''} onChange={handleAnswerChange}>
                 {question.QuestionOption && question.QuestionOption.map((option, index) => (
                   <FormControlLabel
                     key={option.id}
@@ -217,7 +217,8 @@ function QuestionCardStudent({ question, index, options }) {
               </Typography>
             ) : (
               <Button 
-                variant="contained"
+                variant="outlined"
+                sx={{ color: "#0B7564"}}
                 onClick={() => handleSubmit(question.id)}
                 disabled={answeredQuestions.includes(question.id)}
               >
