@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import PeopleIcon from "@mui/icons-material/People";
-import { Box, Grid, TextField } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import apiClient from "../../../apiClient";
 import Swal from "sweetalert2";
@@ -136,6 +136,32 @@ export default function AddUser({ recharge }) {
                   })}
                 />
               </Grid>
+              {<Grid item xs={12} md={6}>
+                  <FormControl sx={{ m: 0 }} fullWidth>
+                      <InputLabel id="demo-simple-select-autowidth-label">Selecciona el rol</InputLabel>
+                      <Select
+                          id='rol'
+                          {
+                          ...register('rol',
+                              {
+                                  required: '*Este campo es obligatorio.',
+                                  pattern: {
+                                      message: 'No es un rol valido.'
+                                  }
+                              })
+                          }
+                          fullWidth
+                          label="Selecciona el dispositivo"
+                          error={!!errors.rol}
+                          helperText={errors.rol?.message}
+
+                      >
+                          <MenuItem value="administrador">administrador</MenuItem>
+                          <MenuItem value="maestro">maestro</MenuItem>
+                          <MenuItem value="usuario">usuario</MenuItem>
+                      </Select>
+                  </FormControl>
+              </Grid>}
               <Grid item xs={12} >
                 <TextField
                   id="email"

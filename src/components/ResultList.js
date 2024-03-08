@@ -48,8 +48,10 @@ const ResultList = ({ bankId }) => {
   const loadData = async () => {
     try {
       const usersResponse = await apiClient.get("/api/users");
-      setUsers(usersResponse.data || []);
-      setFilteredUsers(usersResponse.data);
+      // Filtrar usuarios con el rol "usuario"
+      const filteredUsers = usersResponse.data.filter(user => user.rol === "usuario");
+      setUsers(filteredUsers);
+      setFilteredUsers(filteredUsers);
   
       const questionsResponse = await apiClient.get(`/api/questions?bankId=${bankId}`);
       setQuestions(questionsResponse.data || []);
