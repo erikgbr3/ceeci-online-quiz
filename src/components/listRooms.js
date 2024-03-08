@@ -12,16 +12,12 @@ import { useSession } from "next-auth/react";
 function ListCategory({ room, onDelete, onUpdate, onClick }) {
   const [data, setData] = React.useState( {room} );
   const [edit, setEdit] = React.useState(false);
-  //const [roomss, setRoomss] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [switchState, setSwitchState] = useState(room.enabled);
   const [isHovered, setIsHovered] = useState(false);
   const { data: session } = useSession();
 
-  const { navigateToBankCreation } = useNavigation();
-  
-  //const roomUser = roomss.find(item => item.id === data.id)?.roomUser;
-  
+  const { navigateToBankCreation } = useNavigation();  
  
   useEffect(() => {
     console.log("Switch State:", switchState);
@@ -120,8 +116,8 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
         transition: 'width 0.3s, height 0.3s',
       }}>
           <CardContent style={switchContainerStyle}>
-            <div>
-              <Typography variant="h7" component="h2" style={{ flex: 1 }}>
+            <div style={{ flex: 1, textAlign: session?.user?.rol === 'usuario' ? 'center' : 'flex-start'  }}>
+              <Typography variant="h7" component="h2" >
                 {room.name}
               </Typography>
             </div>
@@ -138,11 +134,13 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
           </CardContent>
 
           <CardContent style={iconButtonStyle}>
+          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
             <Tooltip title="Eliminar">
               <IconButton aria-label="Eliminar" onClick={handleDelete} style={{ color: 'red' }}>
                 <DeleteIcon style={{ fontSize: '30px' }} />
               </IconButton>
             </Tooltip>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -168,31 +168,32 @@ const QuestionList = () => {
     const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
     const currentQuestions = questions.slice(indexOfFirstQuestion, indexOfLastQuestion);
 
-    let filteredQuestions;
-
-  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') {
-    filteredQuestions = currentQuestions.filter((question) => {
-      const isEnabled = switchStates[question.id]?.isEnabled;
-      return isEnabled !== undefined ? isEnabled === true : true;
-    });
-
-    // Verificar si hay preguntas habilitadas después del filtrado
-    const areQuestionsEnabled = filteredQuestions.some((question) => switchStates[question.id]?.isEnabled === true);
-
-    // Mostrar el mensaje correcto en base a la existencia de preguntas habilitadas
-    if (!areQuestionsEnabled) {
+    if (questions.length === 0) {
       return (
         <Typography variant="body1" style={{ marginTop: '15px', textAlign: 'center', width: '100%' }}>
-          {questions.length > 0
-            ? 'No hay preguntas habilitadas por el momento.'
-            : 'Este banco no contiene preguntas aún.'
-          }
+          Este banco no contiene preguntas aún.
         </Typography>
       );
     }
-  } else {
-    filteredQuestions = currentQuestions;
-  }
+  
+    let filteredQuestions = currentQuestions;
+  
+    if (session?.user?.rol === 'usuario') {
+      // Filtra solo las preguntas habilitadas para usuarios regulares
+      filteredQuestions = currentQuestions.filter((question) => {
+        const isEnabled = switchStates[question.id]?.isEnabled;
+        return isEnabled !== undefined ? isEnabled === true : false;
+      });
+  
+      // Muestra el mensaje si no hay preguntas habilitadas
+      if (filteredQuestions.length === 0) {
+        return (
+          <Typography variant="body1" style={{ marginTop: '15px', textAlign: 'center', width: '100%' }}>
+            No hay preguntas habilitadas por el momento.
+          </Typography>
+        );
+      }
+    }
 
       console.log("Filtered Banks:", filteredQuestions);
     
