@@ -7,7 +7,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { Box, Grid, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Swal from 'sweetalert2';
@@ -61,7 +60,6 @@ export default function AddQuestion({ recharge }) {
           text: response.data.message,
           confirmButtonText: 'Aceptar',
         });
-
         setTimeout(() => {
           Swal.close();
         }, 1500);
@@ -89,7 +87,6 @@ export default function AddQuestion({ recharge }) {
           text: response.data.message,
           confirmButtonText: 'Aceptar',
         });
-
         setTimeout(() => {
           Swal.close();
         }, 1500);

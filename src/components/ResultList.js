@@ -14,14 +14,10 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import AddUser from "./modals/addUser";
-import Swal from "sweetalert2";
 import SearchIcon from "@mui/icons-material/Search";
 // import listUser from "./listUser";
 import Pagination from "@mui/material/Pagination";
-import UserList from "./UserList";
 import ResultTable from "./ResultTable";
-import { useRouter } from "next/router";
 
 const ResultList = ({ bankId }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,50 +63,6 @@ const ResultList = ({ bankId }) => {
       loadData();
     }
   }, [bankId]);
-
-  // const loadReport = (users) => {
-  //   // Lógica para construir el informe de calificaciones
-  //   const newReport = users.map((user) => {
-  //     // Obtén las respuestas del usuario
-  //     const userAnswers = user.QuestionAnswer || [];
-  
-  //     // Construye el informe para cada usuario
-  //     const userReport = {
-  //       userId: user.id,
-  //       fullName: `${user.name} ${user.lastName}`,
-  //       questions: [],
-  //       totalScore: 0,
-  //     };
-  
-  //     userAnswers.forEach((answer) => {
-  //       // Encuentra la pregunta correspondiente
-  //       const question = questions.find((q) => q.id === answer.questionId);
-  
-  //       // Encuentra la opción de respuesta correcta
-  //       const correctOption = question.QuestionOption.find(
-  //         (opt) => opt.correctA === answer.selection
-  //       );
-  
-  //       // Verifica si la respuesta es correcta y actualiza la puntuación
-  //       const isCorrect = correctOption && correctOption.correctA === answer.selection;
-  //       if (!isCorrect) {
-  //         userReport.questions.push({
-  //           questionId: answer.questionId,
-  //           questionText: question.textQuestion,
-  //           userAnswer: answer.selection,
-  //           correctAnswer: correctOption.correctA,
-  //         });
-  //       }
-  
-  //       userReport.totalScore += isCorrect ? 1 : 0;
-  //     });
-  
-  //     return userReport;
-  //   });
-  
-  //   setReport(newReport);
-  // };
-  
 
   const renderUsers = () => {
     const indexOfLastUser = currentPage * usersPerPage;

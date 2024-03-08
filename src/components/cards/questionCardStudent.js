@@ -1,11 +1,6 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Grid, Chip, Paper, IconButton, RadioGroup, FormControlLabel, Radio  } from "@mui/material";
-import WarningIcon from "@mui/icons-material/Warning";
 import apiClient from "../../../apiClient";
-import EditQuestion from "../modals/editQuestion";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
@@ -45,56 +40,6 @@ function QuestionCardStudent({ question, index, options }) {
 
   getUserId();
 }, []);
-  
-  // useEffect(() => {
-  //   // Obtener las respuestas de la base de datos al cargar la página
-  //   const fetch = async () => {
-  //     try {
-  //       const response = await apiClient.get(`/api/answer?questionId=${question.id}`);
-  //       const answeredQuestionIds = response.data.map(answer => answer.questionId);
-  //       setAnsweredQuestions(answeredQuestionIds);
-  //     } catch (error) {
-  //       console.error('Error al obtener respuestas de la base de datos:', error);
-  //     }
-  //   };
-
-  //   fetch();
-
-  //   // Obtener las opciones de la API
-  //   apiClient.get('api/options')
-  //     .then(response => {
-  //       setOptions(response.data || []);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-
-  //     setAnsweredQuestions([]);
-  // }, [question.id, userId]);
-
-  // useEffect(() => {
-  //   // Obtener las preguntas contestadas del almacenamiento local al cargar la página
-  //   const storedAnsweredQuestions = localStorage.getItem('answeredQuestions');
-  //   const answeredQuestionIds = storedAnsweredQuestions ? JSON.parse(storedAnsweredQuestions) : [];
-  //   setAnsweredQuestions(answeredQuestionIds);
-  // }, []);
-
-
-
-  // const handleAnswerChange = (event) => {
-  //   // setSelectedAnswer(event.target.value);
-  //   setSelectedAnswer({ ...selectedAnswer, [event.target.name]: event.target.value.id });
-  // }
-
-  // const handleAnswerChange = (event) => {
-  //   setSelectedAnswer({
-  //     ...selectedAnswer,
-  //     [event.target.name]: {
-  //       id: event.target.value.id,
-  //       value: event.target.value, // Ajusta esto según la estructura de tu opción
-  //     },
-  //   });
-  // }
 
   const handleAnswerChange = (event) => {
     const selectedAnswer = question.QuestionOption.find(option => 
@@ -148,10 +93,10 @@ function QuestionCardStudent({ question, index, options }) {
           text: response.data.message,
           confirmButtonText: 'Aceptar',
         });
-  
         setTimeout(() => {
           Swal.close();
         }, 1500);
+
       } catch (error) {
         console.error('Error al enviar la respuesta:', error);
       }
@@ -166,6 +111,9 @@ function QuestionCardStudent({ question, index, options }) {
         text: 'Por favor, selecciona una respuesta antes de enviar.',
         confirmButtonText: 'Aceptar',
       });
+      setTimeout(() => {
+        Swal.close();
+      }, 1500);
     }
   };
 
@@ -219,8 +167,7 @@ function QuestionCardStudent({ question, index, options }) {
                     key={option.id}
                     // value={`${option.id}_${index}`}
                     value={option.option1}
-                    control={<Radio size="small"/>}
-                    name={String(question.id)}
+                    control={<Radio size="small" name={question.id.toString()} />} 
                     label={
                       <div style={listItemStyle}>
                         <span style={incisoStyle}>{`${getAlphabetLetter(index)}.`}</span>{' '}
@@ -235,8 +182,7 @@ function QuestionCardStudent({ question, index, options }) {
                     key={option.id}
                     // value={`${option.id}_${index + 1}`}
                     value={option.option2}
-                    control={<Radio size="small"/>}
-                    name={question.id} 
+                    control={<Radio size="small" name={question.id.toString()} />} 
                     label={
                       <div style={listItemStyle}>
                         <span style={incisoStyle}>{`${getAlphabetLetter(index + question.QuestionOption.length)}.`}</span>{' '}
@@ -251,8 +197,7 @@ function QuestionCardStudent({ question, index, options }) {
                     key={option.id}
                     // value={`${option.id}_${index + 2}`}
                     value={option.option3}
-                    control={<Radio size="small"/>}
-                    name={question.id} 
+                    control={<Radio size="small" name={question.id.toString()} />} 
                     label={
                       <div style={listItemStyle}>
                         <span style={incisoStyle}>{`${getAlphabetLetter(index + 2 * question.QuestionOption.length)}.`}</span>{' '}

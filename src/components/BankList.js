@@ -123,8 +123,8 @@ const BankList = ({ banks }) => {
     if (filteredBanks.length === 0) {
       console.log("No hay bancos habilitados por el momento. Displaying message.");
       return (
-        <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '20px' }}>
-          No hay bancos habilitadas por el momento.
+        <Typography variant="body1" style={{ marginTop: '20px', textAlign: 'center', width: '100%' }}>
+          No hay bancos habilitados por el momento.
         </Typography>
       );
     }
@@ -162,18 +162,6 @@ const BankList = ({ banks }) => {
               }}
             />
           )}
-          {/* {loading ? (
-            <Typography>Cargando...</Typography>
-          ) : bankList.length > 0 ? (
-            renderBanks()
-          ) : (
-            <Typography>
-              {roomId
-                ? 'No hay bancos asociados a esta sala.'
-                : 'Selecciona una sala para ver los bancos asociados.'
-              }
-            </Typography>
-          )} */}
           {loading ? (
               <Typography>Cargando...</Typography>
             ) : (

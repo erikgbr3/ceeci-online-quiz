@@ -158,26 +158,6 @@ function EditUser({ isOpen, closeModal, onUpdate, user }) {
           marginBottom: "5px",
         }}
       >
-        {/* <Button 
-          onClick={closeModal} 
-          variant="contained"
-          color="error"
-        >
-          <IconButton color="inherit">
-            <CancelIcon />
-          </IconButton>
-          Cancelar
-        </Button>
-        <Button 
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          <IconButton color="inherit">
-            <SaveIcon />
-          </IconButton>
-          Guardar
-        </Button> */}
 
         <Button onClick={closeModal} variant="contained" color="error" startIcon={<CancelIcon />}>
             Cancelar
