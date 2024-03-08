@@ -95,6 +95,10 @@ const UserTable = () => {
               confirmButtonText: "Aceptar",
               confirmButtonColor: '#519581FF',
             });
+            setTimeout(() => {
+              Swal.close();
+            }, 1500);
+            
             loadUsers();
           })
           .catch((error) => {
@@ -129,9 +133,6 @@ const UserTable = () => {
 
   return (
     <Box>
-       {/*<Typography sx={{ display: "flex", justifyContent: "Center", fontSize: 25, fontWeight: 'bold',  }}>
-          Usuarios
-        </Typography>*/}
       <Paper>
         <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
           <AddUser recharge={loadUsers}/>

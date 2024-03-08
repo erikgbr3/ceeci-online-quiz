@@ -63,21 +63,6 @@ function ViewAnsweredQuestions({ open, onClose, questionId, question, userAnswer
     fetchAnsweredUsers();
   }, [questionId, userAnswers]);
 
-  
-
-  // const handleScroll = (event) => {
-  //   setScrollPosition(event.target.scrollTop);
-
-  //   const triggerFetchThreshold = 100;
-
-  //   if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - triggerFetchThreshold) {
-  //     // Realiza la carga adicional de datos
-  //     // Puedes llamar a la función fetchAnsweredUsers nuevamente o realizar otras acciones
-  //     fetchAnsweredUsers();
-  //   }
-  // };
-  
-
   const formatDateTime = (dateTimeString) => {
     const options = { 
       year: 'numeric', 

@@ -2,7 +2,6 @@ import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Card, CardActions, CardContent, Typography, Box, IconButton, Tooltip, Switch  } from "@mui/material";
-// import EditComponentModal from "../modals/editComponentModal";
 import apiClient from "../../../apiClient";
 import EditQuestion from "../modals/editQuestion";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';

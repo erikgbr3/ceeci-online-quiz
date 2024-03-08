@@ -3,17 +3,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
   Button,
-  IconButton,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextareaAutosize
 } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
@@ -39,7 +31,6 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
   const onSubmit = (data) => {
    
     data.id = room.id;
-    // data.observations = user.observations;
     //posibles modificaciones
     if (!userss || isNaN(userss)) {
       data.userId = 1; // Puedes asignar un valor predeterminado, por ejemplo, 1
@@ -61,11 +52,6 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
         console.log(data);
         onClose();
         onUpdate(data);
-        //reset();
-
-        // setTimeout(function() {
-        //   location.reload(true);
-        //   }, 3000); 
         setTimeout(() => {
           Swal.close();
         }, 1500);
@@ -77,6 +63,9 @@ function EditUserModal({ open, room, onClose, onUpdate }) {
           icon: "error",
           text: error.response?.data?.message || 'Error al actualizar el usuario',
         });
+        setTimeout(() => {
+          Swal.close();
+        }, 1500);
       });
   };
 

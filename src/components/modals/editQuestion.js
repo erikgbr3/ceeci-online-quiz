@@ -69,6 +69,9 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#519581FF',
       });
+      setTimeout(() => {
+        Swal.close();
+      }, 1500);
 
       resetForm();
       onClose();
@@ -83,6 +86,9 @@ export default function EditQuestion({ open, question, onClose, onUpdate }) {
         icon: "error",
         text: error.response?.data?.message || 'Error al actualizar el usuario',
       });
+      setTimeout(() => {
+        Swal.close();
+      }, 1500);
     }
   };
 

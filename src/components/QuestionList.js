@@ -86,36 +86,6 @@ const QuestionList = () => {
     }
   };
 
-
-  // Efecto que se ejecuta cuando cambia bankId
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       let response;
-
-  //       // Obtiene la lista de bancos basados en bankId
-  //       response = await apiClient.get(`/api/questions?bankId=${bankId}`);
-  //       // Inicializa el estado de los interruptores para cada banco
-  //       const fetchedQuestions = response.data.reduce((acc, question) => {
-  //         acc[question.id] = { isEnabled: false };
-  //         return acc;
-  //       }, {});
-  //       // Actualiza la lista de bancos con los datos obtenidos
-  //       setQuestionStates(fetchedQuestions);
-  //       setQuestions(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching questions:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (bankId !== undefined) {
-  //     fetchData();
-  //   }
-  // }, [bankId]);
-
   // Efecto que se ejecuta cuando cambia bankId o currentPage
   useEffect(() => {
     if (bankId && currentPage) {
@@ -135,29 +105,6 @@ const QuestionList = () => {
       fetchQuestions(bankId, currentPage);
     }
   }, [bankId]);
-
-
-  // const updateQuestions = (question) => {
-  //   console.log(question);
-  //   const questionsCopy = [...questions];
-  //   const index = questionsCopy.findIndex(item => item.id == question.id);
-  //   console.log(index);
-  //   questionsCopy.splice(index, 1, question)
-  //   setQuestions([...questionsCopy]);
-  // }
-
-  // const updateOptions = (option) => {
-  //   console.log(option);
-  //   const optionsCopy = [...options];
-  //   const index = optionsCopy.findIndex(item => item.id == option.id);
-  //   console.log(index);
-  //   optionsCopy.splice(index, 1, option)
-  //   setOptions([...optionsCopy]);
-  // }
-
-  // const handleQuestionsClick = () => {
-  //   navigation.navigateToQuestionsCreation();
-  // };
 
   const updateItem = (items, setItems, item) => {
     console.log(item);
@@ -194,6 +141,9 @@ const QuestionList = () => {
                 confirmButtonColor: '#519581FF',
 
               });
+              setTimeout(() => {
+                Swal.close();
+              }, 1500);
               const updatedQuestions = questions.filter(question => question.id !== id);
               setQuestions(updatedQuestions);
             })
@@ -220,41 +170,61 @@ const QuestionList = () => {
 
     let filteredQuestions;
 
-    if (session?.user?.rol === 'usuario') {
-      // Filter only if the user role is 'usuario'
-      filteredQuestions = currentQuestions.filter((question) => switchStates[question.id]?.isEnabled === true);
-      
-      // Check if there are no banks after filtering
-      if (filteredQuestions.length === 0) {
-        console.log("No hay bancos habilitados por el momento. Displaying message.");
-        return (
-          <Typography variant="body1" style={{ marginTop: '15px', textAlign: 'center', width: '100%' }}>
-            No hay questions habilitados por el momento.
-          </Typography>
-        );
-      }
-    } else {
-      // For other roles, include all banks without filtering
-      filteredQuestions = currentQuestions;
+  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') {
+    filteredQuestions = currentQuestions.filter((question) => {
+      const isEnabled = switchStates[question.id]?.isEnabled;
+      return isEnabled !== undefined ? isEnabled === true : true;
+    });
+
+    // Verificar si hay preguntas habilitadas después del filtrado
+    const areQuestionsEnabled = filteredQuestions.some((question) => switchStates[question.id]?.isEnabled === true);
+
+    // Mostrar el mensaje correcto en base a la existencia de preguntas habilitadas
+    if (!areQuestionsEnabled) {
+      return (
+        <Typography variant="body1" style={{ marginTop: '15px', textAlign: 'center', width: '100%' }}>
+          {questions.length > 0
+            ? 'No hay preguntas habilitadas por el momento.'
+            : 'Este banco no contiene preguntas aún.'
+          }
+        </Typography>
+      );
     }
+  } else {
+    filteredQuestions = currentQuestions;
+  }
 
       console.log("Filtered Banks:", filteredQuestions);
     
-    return filteredQuestions.map((question, index) => (
-      <Grid item key={question.id} xs={12} md={6}>
-        <QuestionCard
-          question={question}
-          index={index}
-          options={options.find(option => option.id === question.optionId)}
-          onDelete={deleteQuestion}
-          onSaved={fetchQuestions}
-          onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
-          questionStates={questionStates} 
-          userAnswers={userAnswers}  
-          switchState={switchStates[question.id]}
-        />
-      </Grid>
-    ));
+      return filteredQuestions.map((question, index) => (
+        <Grid item key={question.id} xs={12} md={6}>
+          {session?.user?.rol === 'usuario' ? (
+            <QuestionCardStudent
+              question={question}
+              index={index}
+              options={options.find(option => option.id === question.optionId)}
+              onDelete={deleteQuestion}
+              onSaved={fetchQuestions}
+              onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
+              questionStates={questionStates} 
+              userAnswers={userAnswers}  
+              switchState={switchStates[question.id]}
+            />
+          ) : (
+            <QuestionCard
+              question={question}
+              index={index}
+              options={options.find(option => option.id === question.optionId)}
+              onDelete={deleteQuestion}
+              onSaved={fetchQuestions}
+              onUpdate={(updatedItem) => updateItem(questions, setQuestions, updatedItem)}
+              questionStates={questionStates} 
+              userAnswers={userAnswers}  
+              switchState={switchStates[question.id]}
+            />
+          )}
+        </Grid>
+      ));
   };
 
   return (
@@ -287,14 +257,6 @@ const QuestionList = () => {
                     onChange={changePage}
                   />
                 </Box>
-                {questions.length === 0 && (
-                  <Typography>
-                    {bankId
-                      ? 'Este banco no contiene preguntas aún.'
-                      : 'Selecciona un banco para ver sus preguntas.'
-                    }
-                  </Typography>
-                )}
               </React.Fragment>
             )}
       </Paper>

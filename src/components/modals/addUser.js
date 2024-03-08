@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import PeopleIcon from "@mui/icons-material/People";
@@ -44,6 +43,10 @@ export default function AddUser({ recharge }) {
           confirmButtonText: "Aceptar",
           confirmButtonColor: '#519581FF',
         });
+        setTimeout(() => {
+          Swal.close();
+        }, 1500);
+
         closeModal();
         recharge();
         reset();
