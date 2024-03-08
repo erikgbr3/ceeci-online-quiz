@@ -84,8 +84,8 @@ const LoginPage = ({}) => {
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: '100% auto',
-          backgroundPosition: 'center',
+          height: '100%',
+          backgroundSize: 'cover',
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={1} square>
@@ -176,7 +176,7 @@ const LoginPage = ({}) => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ textAlign: "center", fontWeight: 'bold' }}
+            sx={{ textAlign: "center", fontWeight: 'bold', backgroundColor: "#30315A"}}
           >
             Iniciar sesión
           </Button>

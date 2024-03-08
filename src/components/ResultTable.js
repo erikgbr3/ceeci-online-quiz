@@ -45,7 +45,7 @@ function ResultTable({ user, questions }) {
 
   return (
     <TableRow key={data.id}>
-      <TableCell>{data.name} {data.lastName}</TableCell>
+      <TableCell sx={{ fontWeight: "bold", color: "gray", fontSize: 13 }}>{data.name} {data.lastName}</TableCell>
 
       {questions.map((question) => {
         const userAnswer = user && user.UserAnswer && user.UserAnswer.find((answer) => answer.questionId === question.id);
@@ -60,6 +60,7 @@ function ResultTable({ user, questions }) {
         const cellStyle = {
           color: isCorrect ? 'green' : 'red',
           padding: 0,
+          fontSize: 13,
         };
 
         return (
@@ -81,7 +82,7 @@ function ResultTable({ user, questions }) {
                 </Grid>
               </Grid>
             ) : (
-              <span style={{ color: "orange", fontWeight: 'bold' }}>Sin responder</span>
+              <span style={{ color: "orange", fontWeight: 'bold', fontSize: 13}}>Sin responder</span>
             )}
           </TableCell>
         );

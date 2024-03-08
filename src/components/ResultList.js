@@ -32,7 +32,7 @@ const ResultList = ({ bankId }) => {
   const [questions, setQuestions] = useState([]);
   // const [report, setReport] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 1000;
+  const usersPerPage = 7;
 
   
 
@@ -160,7 +160,7 @@ const ResultList = ({ bankId }) => {
         <div style={{ overflowX: "auto" }}>
           <TableContainer component={Paper}>
           <Table aria-label="User Table">
-            <TableHead sx={{ background: '#f5f5f5'}}>
+            <TableHead sx={{ background: '#4AAAA216'}}>
               <TableRow>
                 <TableCell sx={{ color: '#223354', fontWeight: "500" }}>NOMBRE</TableCell>
                 {questions.map((question, index) => (

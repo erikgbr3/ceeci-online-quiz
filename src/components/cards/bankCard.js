@@ -85,11 +85,12 @@ const BankCard = ({ bank }) => {
 
   const switchStyle = {
     marginLeft: 'auto',
+    color: '#519581FF',
   };
 
   return (
     
-      <Card key={bank.id} style={{ backgroundColor: '#f5f5f5'}}>
+      <Card key={bank.id} style={{ backgroundColor: '#4AC7A214'}}>
         <CardContent style={switchContainerStyle}>
           <div onClick={handleCardClick} style={{ cursor: 'pointer' }}>
             <Typography 
@@ -124,6 +125,7 @@ const BankCard = ({ bank }) => {
             <Button 
               onClick={handleButtomClick}
               variant="outlined"
+              sx={{ color: "#0B7564"}}
             >
               Ver calificaciones
             </Button>

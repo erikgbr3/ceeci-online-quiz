@@ -120,10 +120,10 @@ const CardCourse = () => {
       text: "Los datos relacionados con el usuario se perderán permanentemente",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
       confirmButtonText: "Si, eliminar",
+      cancelButtonColor: "#519581FF",
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         console.log("Eliminar usuario con ID:", id); 
@@ -134,7 +134,9 @@ const CardCourse = () => {
               position: "center",
               icon: "success",
               text: response.data.message,
-              confirmButtonText: "Aceptar"
+              confirmButtonText: "Aceptar",
+              confirmButtonColor: '#519581FF',
+
             });
             setTimeout(() => {
               Swal.close();

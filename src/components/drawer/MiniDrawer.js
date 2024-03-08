@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import { getSession, useSession } from 'next-auth/react';
 import ButtonCloseSession from "../ButtonCloseSession";
 import useNavigation from "@/pages/api/routes/routes";
-import { Tooltip } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -115,7 +115,7 @@ export default function MiniDrawer({children}) {
   return (
     <Box sx={{ display: "flex", overflowX: "auto" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{backgroundColor: "rgb(34, 51, 84)",}}>
+      <AppBar position="fixed" open={open} sx={{backgroundColor: "rgba(11, 117, 100)",}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -198,7 +198,7 @@ export default function MiniDrawer({children}) {
                       minWidth: 0,
                       mr: open ? 4 : "auto",
                       justifyContent: "center",
-                      color: '#223354'
+                      color: '#519581FF'
                     }}
                   >
                     {index === 0 && session?.user?.rol !== "usuario" && ( 
@@ -211,6 +211,7 @@ export default function MiniDrawer({children}) {
                         <ClassIcon />
                       </Tooltip>
                     )}
+                    
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>

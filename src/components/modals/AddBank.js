@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Slide, TextField } from '@mui/material';
-import PeopleIcon from '@mui/icons-material/People';
+import ArticleIcon from '@mui/icons-material/Article';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useModal from '../../../hooks/useModal';
@@ -41,6 +41,8 @@ export default function AddBank ({ recharge }) {
         icon: "success",
         text: response.data.message,
         confirmButtonText: "Aceptar",
+        confirmButtonColor: '#519581FF',
+
       });
       setTimeout(() => {
         Swal.close();
@@ -64,10 +66,10 @@ export default function AddBank ({ recharge }) {
       <Box xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={openModal}
-          sx={{ margin: "10px", backgroundColor: "#223354"}}
+          sx={{ margin: "10px", backgroundColor: "#0B7564"}}
           variant="contained"
           color="primary"
-          startIcon={<PeopleIcon />}
+          startIcon={<ArticleIcon />}
         >
           Agregar Banco
         </Button>
@@ -86,7 +88,9 @@ export default function AddBank ({ recharge }) {
           display: "flex",
           justifyContent: "center",
           fontSize: 25,
-          fontWeight: "bold"
+          fontWeight: "bold",
+          color: "#0B7564"
+
         }}
       >
         <span>Agregar Banco</span>
@@ -123,10 +127,10 @@ export default function AddBank ({ recharge }) {
             marginBottom: "5px",
           }}
         >
-          <Button onClick={closeModal} variant="contained" color="error" startIcon={<CancelIcon />}>
+          <Button onClick={closeModal} variant="outlined" color="error" sx={{ color: "#0B7564"}} startIcon={<CancelIcon />}>
             Cancelar
           </Button>
-          <Button type="submit" variant="contained" color="success" startIcon={<AddCircleIcon />}>
+          <Button type="submit" variant="contained" color="success" sx={{ backgroundColor: "#0B7564"}} startIcon={<AddCircleIcon />}>
             Agregar
           </Button>
         </DialogActions>
