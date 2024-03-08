@@ -145,6 +145,7 @@ function EditUser({ isOpen, closeModal, onUpdate, user }) {
                   })}
                 >
                   <MenuItem value="administrador">administrador</MenuItem>
+                  <MenuItem value="maestro">maestro</MenuItem>
                   <MenuItem value="usuario">usuario</MenuItem>
                 </Select>
               </FormControl>

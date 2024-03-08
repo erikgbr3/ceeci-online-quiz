@@ -79,6 +79,10 @@ const QuestionList = () => {
       // Actualiza la lista de preguntas con las datos obtenidos
       setSwitchStates(fetchedQuestions);
       setQuestions(response.data);
+
+      // Obtiene las respuestas de los usuarios
+      const userAnswersResponse = await apiClient.get('/api/users');
+      setUserAnswers(userAnswersResponse.data || []);
     } catch (error) {
       console.error('Error fetching questions:', error);
     } finally {
