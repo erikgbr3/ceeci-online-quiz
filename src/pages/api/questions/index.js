@@ -18,43 +18,40 @@ export default function handler(req, res) {
 }
 
 const getQuestions = async (req, res) => {
+  const { bankId, enabled } = req.query;
 
-  const {bankId, enabled } = req.query;
-
-  try{
-      //los datos vienen del req.body
+  try {
       let questions;
-      //guardar cliente
-      if(bankId){
+
+      if (bankId) {
           questions = await db.Question.findAll({
               where: {
                   bankId: bankId
               },
-              include: ['QuestionBank']
+              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
           });
-      }else if (enabled !== undefined) {
+      } else if (enabled !== undefined) {
           questions = await db.Question.findAll({
               where: {
                   enabled: enabled === 'true'
-              }
-          })
+              },
+              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
+          });
       } else {
           questions = await db.Question.findAll({
-              include: ['QuestionBank']
+              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
           });
-          
       }
 
-      return res.json(questions)
-  
-  }catch(error){
-      console.log(error);
-      let errors = []
+      return res.json(questions);
 
-      if(error.errors){
-          //extrae la info
+  } catch (error) {
+      console.log(error);
+      let errors = [];
+
+      if (error.errors) {
           errors = error.errors.map((item) => ({
-              error: item.message, 
+              error: item.message,
               field: item.path,
           }));
       }
@@ -62,9 +59,10 @@ const getQuestions = async (req, res) => {
       return res.status(400).json({
           message: `Ocurrió un error al procesar la petición: ${error.message}`,
           errors,
-      })
+      });
   }
-}
+};
+
 
 //METODO MODIFICADOS PARA WEB//
 const addQuestions = async (req, res) =>  {
