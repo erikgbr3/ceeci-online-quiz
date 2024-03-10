@@ -3,8 +3,8 @@ import Typography from '@mui/material/Typography';
 import { Container, Grid, Paper, Chip, TextField, FormControl, InputLabel, Select, MenuItem, Autocomplete, NativeSelect, Breadcrumbs } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import apiClient from 'apiClient'
 import {useRouter} from 'next/router';
+import apiClient from '../../../apiClient';
 
 export default function Products(){
     const router = useRouter();
