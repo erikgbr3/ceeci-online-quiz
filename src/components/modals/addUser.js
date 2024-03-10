@@ -156,7 +156,7 @@ export default function AddUser({ recharge }) {
                           helperText={errors.rol?.message}
 
                       >
-                          <MenuItem value="administrador">administrador</MenuItem>
+                          <MenuItem value="admin">administrador</MenuItem>
                           <MenuItem value="maestro">maestro</MenuItem>
                           <MenuItem value="usuario">usuario</MenuItem>
                       </Select>

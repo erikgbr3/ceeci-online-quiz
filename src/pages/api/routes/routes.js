@@ -7,7 +7,7 @@ const useNavigation = () => {
   const { data: session } = useSession();
 
   const handleUsersClick = () => {
-    if (session?.user?.rol === 'administrador') {
+    if (session?.user?.rol === 'admin') {
       router.push('/users');
     } else {
       // Acceso denegado para roles diferentes a 'administrador'

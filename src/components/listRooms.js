@@ -121,7 +121,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
                 {room.name}
               </Typography>
             </div>
-            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
             <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
             <Switch 
               style={switchStyle} 
@@ -134,7 +134,7 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
           </CardContent>
 
           <CardContent style={iconButtonStyle}>
-          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+          {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
             <Tooltip title="Eliminar">
               <IconButton aria-label="Eliminar" onClick={handleDelete} style={{ color: 'red' }}>
                 <DeleteIcon style={{ fontSize: '30px' }} />

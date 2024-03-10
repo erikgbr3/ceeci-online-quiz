@@ -157,7 +157,7 @@ const CardCourse = () => {
           Salas
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+        {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
           <AddRooms recharge={loadRooms} />
         )}
         </Box>

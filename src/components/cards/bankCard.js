@@ -110,7 +110,7 @@ const BankCard = ({ bank }) => {
               {formatDateTime(bank.createdAt)}
             </Typography>
           </div>
-          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+          {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
           <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
             <Switch
               style={switchStyle}

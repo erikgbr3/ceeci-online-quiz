@@ -134,7 +134,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
                 {index !== undefined ? ` ${index + 1}: ` : ''} {question.textQuestion}
               </Typography>
             </div>
-            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
               <Tooltip title={switchState ? "Deshabilitar" : "Habilitar"}>
                 <Switch
                   style={switchStyle}
@@ -174,7 +174,7 @@ function QuestionCard({ question, index, options, onDelete, onUpdate, userAnswer
               </div>
             )}
 
-          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+          {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
             <>
               <CardActions sx={{ display: "flex", justifyContent: "flex-end", marginTop: '-30px'}}>
                 <IconButton

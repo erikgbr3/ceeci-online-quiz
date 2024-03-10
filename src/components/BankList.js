@@ -154,7 +154,7 @@ const BankList = ({ banks }) => {
           <Typography sx={{ display: 'flex', justifyContent: 'Center', fontSize: 25, fontWeight: 'bold' }}>
             Bancos
           </Typography>
-          {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+          {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
             <AddBank
               recharge={() => {
                 setBankList(banks);

@@ -45,7 +45,7 @@ const LoginPage = ({}) => {
         // El usuario ya está autenticado, redirigir según el rol
         if (
           session.user?.rol === 'usuario' ||
-          session.user?.rol === 'administrador' ||
+          session.user?.rol === 'admin' ||
           session.user?.rol === 'maestro'
         ) {
           router.replace('/rooms');
@@ -189,7 +189,7 @@ const LoginPage = ({}) => {
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
 
-  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') {
+  if (session?.user?.rol === 'usuario' || session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') {
     return {
       redirect: {
         destination: '/rooms',

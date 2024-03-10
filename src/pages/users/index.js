@@ -8,4 +8,4 @@ function Users() {
   );
 }
 
-export default withAuth(Users, ['administrador']);
+export default withAuth(Users, ['admin']);

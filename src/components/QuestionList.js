@@ -239,7 +239,7 @@ const QuestionList = () => {
           {questions[0]?.QuestionBank?.name || ''}
          </Typography>
           <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "flex-end"}}>
-            {(session?.user?.rol === 'administrador' || session?.user?.rol === 'maestro') && (
+            {(session?.user?.rol === 'admin' || session?.user?.rol === 'maestro') && (
               <AddQuestion 
                 recharge={() => {
                   setQuestions(questions);

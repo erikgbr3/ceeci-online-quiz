@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }) {
   }
 
   // Mostrar el MiniDrawer en todas las demás páginas
-  const isAdmin = pageProps.session?.rol === 'administrador';
+  const isAdmin = pageProps.session?.rol === 'admin';
 
 
   return (

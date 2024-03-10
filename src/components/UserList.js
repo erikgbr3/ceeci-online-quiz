@@ -6,7 +6,7 @@ import EditUser from "./modals/editUser";
 
 
 const getRolColor = (rol) => {
-  return rol === "administrador"
+  return rol === "admin"
     ? "red"
     : rol === "usuario"
     ? "rgb(51, 194, 255)"
@@ -20,7 +20,7 @@ const CustomTableCell = styled(TableCell)(({ rol }) => ({
 
 const RolText = styled("span")(({ rol }) => ({
   backgroundColor:
-    rol === "administrador" ? "rgba(255, 25, 67, 0.1)" : "rgba(51, 194, 255, 0.1)",
+    rol === "admin" ? "rgba(255, 25, 67, 0.1)" : "rgba(51, 194, 255, 0.1)",
   color: getRolColor(rol),
   borderRadius: "30px",
   padding: "5px 10px",
