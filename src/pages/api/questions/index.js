@@ -19,7 +19,7 @@ export default function handler(req, res) {
 
 const getQuestions = async (req, res) => {
 
-  const bankId = req.query.bankId;
+  const {bankId, enabled } = req.query;
 
   try{
       //los datos vienen del req.body
@@ -30,11 +30,17 @@ const getQuestions = async (req, res) => {
               where: {
                   bankId: bankId
               },
-              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
+              include: ['QuestionBank']
           });
-      }else {
+      }else if (enabled !== undefined) {
           questions = await db.Question.findAll({
-              include: ['QuestionBank', 'QuestionOption', 'QuestionAnswer']
+              where: {
+                  enabled: enabled === 'true'
+              }
+          })
+      } else {
+          questions = await db.Question.findAll({
+              include: ['QuestionBank']
           });
           
       }
