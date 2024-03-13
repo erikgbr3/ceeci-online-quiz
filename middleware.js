@@ -1,15 +1,15 @@
-import { getToken } from 'next-auth/jwt';
+import { getSession } from 'next-auth/react';
 import { NextResponse } from 'next/server'
 
 // This function can be marked `async` if using `await` inside
 export  async function middleware(request) {
     // Verificar que el usuario esté autenticado  
-    const session = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-    console.log(session);
+    const session = await getSession({ req: request });
+  console.log(session);
 
     // Estraer la ruta que se estaba visualizando 
     if (!session ) {
-      return NextResponse.redirect(`http://localhost:3000/login`)
+      return NextResponse.redirect(`/login`)
     }
 
     // Si está autenticado, continuar con la petición

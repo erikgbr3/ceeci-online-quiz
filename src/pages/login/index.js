@@ -68,7 +68,20 @@ const LoginPage = ({}) => {
 
   const onLoginUser = async ({ email, password }) => {
     setShowError(false);
-    await signIn("credentials", { email, password });
+    const result = await signIn("credentials", { email, password, redirect: false });
+  
+    if (result.error) {
+      setShowError(true);
+    } else {
+      // El usuario ha iniciado sesión correctamente, redirigir según el rol
+      if (result?.session?.user?.rol === 'usuario' ||
+          result?.session?.user?.rol === 'admin' ||
+          result?.session?.user?.rol === 'maestro') {
+        router.replace('/rooms');
+      } else {
+        router.replace('/');
+      }
+    }
   };
 
   return (
