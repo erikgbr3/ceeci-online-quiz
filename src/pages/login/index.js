@@ -38,6 +38,33 @@ const LoginPage = ({}) => {
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session) {
+        // El usuario ya está autenticado, redirigir según el rol
+        if (
+          session.user?.rol === 'usuario' ||
+          session.user?.rol === 'admin' ||
+          session.user?.rol === 'maestro'
+        ) {
+          router.replace('/rooms');
+        } else {
+          router.replace('/');
+        }
+      }
+    };
+
+    checkSession();
+
+    getProviders().then((prov) => {
+      setProviders(prov);
+    });
+
+    if (router.query.error && router.query.error === "CredentialsSignin") {
+      setShowError(true);
+    }
+  }, [router, signIn]);
 
   const onLoginUser = async ({ email, password }) => {
     setShowError(false);

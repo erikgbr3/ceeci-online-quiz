@@ -5,8 +5,7 @@ import { NextResponse } from 'next/server'
 export  async function middleware(request) {
     // Verificar que el usuario esté autenticado  
     const session = await getSession({ req: request });
-  console.log(session);
-
+    console.log(session);
     // Estraer la ruta que se estaba visualizando 
     if (!session ) {
       return NextResponse.redirect(`http://localhost:3000/login`)
