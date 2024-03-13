@@ -9,7 +9,7 @@ export  async function middleware(request) {
 
     // Estraer la ruta que se estaba visualizando 
     if (!session ) {
-      return NextResponse.redirect(`/login`)
+      return NextResponse.redirect(`http://localhost:3000/login`)
     }
 
     // Si está autenticado, continuar con la petición
