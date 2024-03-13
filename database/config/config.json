@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "admin",
-    "password": "n1z4pH3c",
+    "username": "root",
+    "password": "Utim@2023",
     "database": "ceeci-bank-v2",
-    "host": "mysql-160592-0.cloudclusters.net",
-    "port": "16843",
+    "host": "127.0.0.1",
+    "port": "3306",
     "dialect": "mysql"
   },
   "test": {

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'AnswerOption',
         foreignKey:'optionId'
       })
-      models.Answer.hasMany(models.User, {
+      models.Answer.belongsTo(models.User, {
         as: 'AnswerUser',
         foreignKey:'userId'
       })

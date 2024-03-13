@@ -63,13 +63,11 @@ const listUsers = async (req, res) => {
       whereCondition = {
         rol: rol,
       };
-    }
-
-    if (questionId) {
+    }else if (questionId) {
       whereCondition['$UserAnswer.questionId$'] = { [Op.eq]: questionId };
     }
     
-     users = await db.User.findAll({
+   users = await db.User.findAll({
       where: whereCondition,
       attributes: ['id','name', 'lastName', 'email', 'password', 'rol'],
       include: ['UserAnswer']
