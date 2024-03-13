@@ -10,4 +10,4 @@ function Rooms () {
   );
 }
 
-export default withAuth(Rooms, ['admin', 'usuario']);
+export default withAuth(Rooms, ['admin', 'usuario', 'maestro']);
