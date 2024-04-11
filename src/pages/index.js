@@ -3,21 +3,10 @@ import {
   Paper,
   Typography,
   Button,
-  Card,
-  CardContent,
-  CardActions,
-  CardHeader,
   CardMedia,
+  Grid,
 } from "@mui/material";
-import { Assignment, Devices, Settings } from "@mui/icons-material";
-import PeopleIcon from "@mui/icons-material/People";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import { useRouter } from "next/router";
-import withAuth from "@/components/withAuth";
 
 function Home({ user }) {
   const router = useRouter();
@@ -26,51 +15,68 @@ function Home({ user }) {
     router.push('/login');
   };
   return (
-    <Paper>
-      <Typography
-        sx={{
-          fontSize: 35,
-          display: "flex",
-          justifyContent: "center",
-          fontWeight: "bold",
-        }}
-      >
-        CEECI
-      </Typography>
-
+    <Paper sx= {{width: '100%', height: '100%',  padding: 1}}>
+      <Grid container spacing={2} mt={0}>
+        <Grid item xs={6} sx={{ display: 'flex'}}>
+          <Typography
+            sx={{
+              padding: "10px",
+              fontSize: 35,
+              display: "flex",
+              justifyContent: "center",
+              fontWeight: "bold",
+              color: "#30315A",
+            }}
+          >
+            CEECI
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button
+            type="submit"
+            sx={{
+              fontWeight: "bold",
+              fontSize: 16,
+              padding: "10px 30px", 
+              width: '200px',
+              textAlign: "center", 
+              color: "#30315A",
+              
+            }}
+            onClick={handleLoginClick}
+          >
+            Iniciar sesión
+          </Button> 
+          </Grid>       
+      </Grid>
+      
       <Typography
         sx={{
           marginTop: 1,
           fontSize: 20,
           display: "flex",
           justifyContent: "center",
+          marginBottom: 3,
+          color: "#30315A",
         }}
       >
-        Organización...
+        Siempre un paso adelante. Educación profesional para tu futuro.
       </Typography>
 
-      {/* <CardMedia
+      <CardMedia
         component="img"
         alt="Imagen"
-        image="https://reisdigital.es/wp-content/uploads/2022/10/los-mejores-software-y-hardware-para-tu-empresa.jpg"
+        image='././imgHome.jpg'
         sx={{
-          width: 600,
+          width: '100%', 
+          maxWidth: '100%', 
+          height: 'auto',
           margin: "auto",
           display: "block",
-          borderRadius: 10,
+          borderRadius: 5,
+          marginBottom: 5,
         }}
-      /> */}
-      <Typography
-        sx={{
-          marginTop: 1,
-          fontSize: 20,
-          display: "flex",
-          justifyContent: "center",
-          fontWeight: "bold",
-        }}
-      >
-        Somos una organización...
-      </Typography>
+      />
       <div
         style={{
           display: "flex",
@@ -79,21 +85,6 @@ function Home({ user }) {
           marginBottom: 2,
         }}
       >
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            marginTop: 2,
-            fontWeight: "bold",
-            fontSize: 16,
-            padding: "10px 30px", 
-            width: '300px',
-            marginBottom: 4,
-          }}
-          onClick={handleLoginClick}
-        >
-          Iniciar sesión
-        </Button>
       </div>
     </Paper>
   );
