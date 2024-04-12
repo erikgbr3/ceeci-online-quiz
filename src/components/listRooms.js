@@ -106,9 +106,9 @@ function ListCategory({ room, onDelete, onUpdate, onClick }) {
       style={{ display: 'flex', flexWrap: 'wrap' }}
     >
       <Card variant="outlined" style={{
-        width: isHovered ? '350px' : '310px',
-        height: isHovered ? '170px' : '150px',
-        margin: '10px',
+        width: isHovered ? '320px' : '310px',
+        height: isHovered ? '160px' : '150px',
+        // margin: '10px',
         borderRadius: '15px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         cursor: 'pointer',

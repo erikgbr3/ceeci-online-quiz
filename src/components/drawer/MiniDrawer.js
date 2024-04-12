@@ -165,7 +165,7 @@ export default function MiniDrawer({children}) {
                     minWidth: 0,
                     mr: open ? 4 : "auto",
                     justifyContent: "center",
-                    color: '#223354'
+                    color: '#519581FF'
                   }}
                 >
                   <Tooltip title="Salas" arrow>

@@ -121,7 +121,7 @@ const BankCard = ({ bank }) => {
           )}
         </CardContent>
         <CardActions sx={{ display: "flex", justifyContent: "center", marginTop: '10px'}}>
-          {/* <Link href="/results"> */}
+          {session?.user?.rol !== 'usuario' && (
             <Button 
               onClick={handleButtomClick}
               variant="outlined"
@@ -129,7 +129,7 @@ const BankCard = ({ bank }) => {
             >
               Ver calificaciones
             </Button>
-          {/* </Link> */}
+          )}
         </CardActions>
               
       </Card>
